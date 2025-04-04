@@ -710,6 +710,7 @@ class DataProvider extends ChangeNotifier {
       description: "",
       date: dateTime,
       isViewOnly: isViewOnly,
+      category: "",
     );
 
     if (ExpenseDataBaseService.createExpense(expense) == false) {
@@ -792,6 +793,7 @@ class DataProvider extends ChangeNotifier {
       description: "",
       date: dateTime,
       isViewOnly: isViewOnly,
+      category: "",
     );
 
     if (ExpenseDataBaseService.createExpense(expenseM) == false) {
