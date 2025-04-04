@@ -190,15 +190,15 @@ class ExpenseData extends State<ExpenseScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  
-                  DropdownButtonFormField<String>(
+              
+              DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 icon: Icon(Icons.category),
                 border: OutlineInputBorder(),
                 hintText: 'Select Category',
               ),
               value: selectedSubCategory,
-              items: categoryData[objectDropDown!]!.map((String item) {
+              items: categoryData[objectDropDown]!.map((String item) {
                 return DropdownMenuItem<String>(
                   value: item,
                   child: Text(item),

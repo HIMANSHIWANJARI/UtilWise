@@ -498,6 +498,7 @@ class DataProvider extends ChangeNotifier {
           amount: int.parse(expenseTemp[k].amount),
           date: expenseTemp[k].date.toString(),
           isViewOnly: expenseTemp[k].isViewOnly,
+          category : expenseTemp[k].category,
         ),
       );
       objectUnresolvedExpenseMapdb![currCommunity]![currObject]!.add(
@@ -729,6 +730,7 @@ class DataProvider extends ChangeNotifier {
         isPaid: false,
         creatorTuple: creatorTuple,
         isViewOnly: isViewOnly,
+        category: categoryName,
       ),
     );
     objectUnresolvedExpenseMapdb![ctmp]![otmp]!.add(expense);
@@ -818,6 +820,7 @@ class DataProvider extends ChangeNotifier {
         isPaid: false,
         creatorTuple: expense.creatorTuple,
         isViewOnly: isViewOnly,
+        category : expense.category,
       ),
     );
 

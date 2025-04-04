@@ -11,6 +11,7 @@ class Expense extends StatefulWidget {
   final bool isPaid;
   final String objectName;
   final String creatorTuple;
+  final String category;
   final bool isViewOnly;
 
   const Expense(
@@ -22,7 +23,9 @@ class Expense extends StatefulWidget {
       required this.date,
       required this.isPaid,
       required this.creatorTuple,
-      required this.isViewOnly})
+      required this.isViewOnly,
+      required this.category,
+      })
       : super(key: key);
 
   @override
@@ -41,7 +44,7 @@ class _ExpenseState extends State<Expense> {
 
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      height: 80,
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.all(5),
       decoration: BoxDecoration(
@@ -62,6 +65,14 @@ class _ExpenseState extends State<Expense> {
           Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text(
               widget.creator,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              widget.category,
+              
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -105,6 +116,7 @@ class _ExpenseState extends State<Expense> {
                   objectName: widget.objectName,
                   creatorTuple: widget.creatorTuple,
                   isViewOnly: widget.isViewOnly,
+                  category: widget.category,
                 );
 
                 Navigator.push(
