@@ -110,16 +110,27 @@ class ObjectData extends State<ObjectScreen> {
                     height: 10,
                   ),
 
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      ),
-                      icon: Icon(Icons.grid_view),
-                      hintText: 'Enter the Object Name',
-                    ),
-                    controller: objectName,
-                  ),
+              DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+              border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              icon: Icon(Icons.grid_view),
+              hintText: 'Select the Object',
+            ),
+            value: objectName.text.isEmpty ? null : objectName.text,
+            items: ['Vehicle', 'Education', 'House','Food','Medical','Travel','Shopping','Other'].map((String value) {
+            return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+            );
+  }).toList(),
+  onChanged: (String? newValue) {
+    if (newValue != null) {
+      objectName.text = newValue;
+    }
+  },
+),
 
                   SizedBox(
                     height: 10,
