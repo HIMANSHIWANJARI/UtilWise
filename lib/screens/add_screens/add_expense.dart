@@ -368,7 +368,8 @@ class ExpenseData extends State<ExpenseScreen> {
                               dateController.text,
                               description.text,
                               communityDropDown,
-                              isViewOnly);
+                              isViewOnly,
+                              categoryName.text);
 
                           ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
