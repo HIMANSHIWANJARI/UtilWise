@@ -119,7 +119,7 @@ class ObjectData extends State<ObjectScreen> {
               hintText: 'Select the Object',
             ),
             value: objectName.text.isEmpty ? null : objectName.text,
-            items: ['Vehicle', 'Education', 'House','Food','Medical','Travel','Shopping','Other'].map((String value) {
+            items: ['Vehicle', 'Education', 'House','Food','Health','Travel','Shopping','Entertainment','Gifts','Other'].map((String value) {
             return DropdownMenuItem<String>(
             value: value,
             child: Text(value),

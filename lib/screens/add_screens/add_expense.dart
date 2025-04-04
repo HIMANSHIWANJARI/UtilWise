@@ -27,6 +27,21 @@ class ExpenseData extends State<ExpenseScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController dateController = TextEditingController();
 
+  String? selectedSubCategory;  // Stores selected sub-category
+  final TextEditingController categoryName = TextEditingController();
+  final Map<String, List<String>> categoryData = {
+    'Education': ['Fee', 'Uniform', 'Stationary','Others'],
+    'Shopping': ['Cosmetics', 'Wearables', 'Gadgets','Others'],
+    'Entertainment': ['Movies', 'Games', 'Concerts','Others'],
+    'House': ['Rent', 'Bills', 'Maintainance','Others'],
+    'Vehicle' : ['Fuel', 'Repair', 'Insurance','Others'],
+    'Health': ['Medicines', 'Checkup', 'Insurance','Others'],
+    'Food': ['Groceries', 'Dining', 'Snacks','Others'],
+    'Gifts': ['Birthday', 'Anniversary', 'Festival','Others'],
+    'Travel': ['Tickets', 'Stay', 'Food','Others'],
+    'Other': ['Miscellaneous'],
+  };
+
   // DateTime expenseDate=
 
   String communityDropDown = '';
@@ -175,6 +190,28 @@ class ExpenseData extends State<ExpenseScreen> {
                   SizedBox(
                     height: 10,
                   ),
+                  
+                  DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                icon: Icon(Icons.category),
+                border: OutlineInputBorder(),
+                hintText: 'Select Category',
+              ),
+              value: selectedSubCategory,
+              items: categoryData[objectDropDown!]!.map((String item) {
+                return DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(item),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedSubCategory = newValue;
+                  categoryName.text = newValue!; // Store selection in TextEditingController
+                });
+              },
+            ),
+            SizedBox(height : 20),
                   TextFormField(
                     decoration: const InputDecoration(
                       icon: Icon(Icons.currency_rupee_outlined),
