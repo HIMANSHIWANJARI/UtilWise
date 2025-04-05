@@ -12,6 +12,7 @@ import 'package:utilwise/Pages/main_pages/navigation_page.dart';
 import 'package:utilwise/Pages/main_pages/object_page.dart';
 import 'package:utilwise/Pages/profile_pages/profile_page.dart';
 import 'package:utilwise/screens/add_screens/add-recurring-expense.dart';
+import 'package:utilwise/screens/spendingsummary.dart';
 
 import '../../components/expense.dart';
 import '../../components/object.dart';
@@ -325,7 +326,7 @@ class _CommunityPageState extends State<CommunityPage> {
                         ),
                         SizedBox(height: 15),
                         Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Container(
                                 child: Column(
@@ -355,6 +356,38 @@ class _CommunityPageState extends State<CommunityPage> {
                                     ),
                                     const Text(
                                       "Recurring Expenses",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Container(
+                                      height: 50,
+                                      width: 50,
+                                      child: FloatingActionButton(
+                                        backgroundColor: Color(0xFF56D0A0),
+                                        heroTag: "BTN-9",
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                SpendingSummaryScreen(creatorTuple: widget.creatorTuple),
+                                            ),
+                                          );
+                                        },
+                                        child: const Icon(Icons.insert_chart),
+                                      ),
+                                    ),
+                                    const Text(
+                                      "Spending Summary",
                                       style: TextStyle(
                                         fontSize: 12,
                                       ),
