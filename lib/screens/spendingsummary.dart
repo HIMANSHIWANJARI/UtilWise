@@ -39,7 +39,6 @@ class _SpendingSummaryScreenState extends State<SpendingSummaryScreen> {
       }
 
       final communityId = communitySnapshot.docs.first.id;
-      // Step 2: Get all objects belonging to the community
       final objectsSnapshot = await firestore
           .collection('objects')
           .where('CommunityID', isEqualTo: communityId)
@@ -59,8 +58,6 @@ class _SpendingSummaryScreenState extends State<SpendingSummaryScreen> {
         });
         return;
       }
-
-      // Step 3: Get all expenses related to those objects (handling Firestore's `whereIn` limit of 10 per call)
       Map<String, double> tempMap = {};
       const batchSize = 10;
 
@@ -94,51 +91,72 @@ class _SpendingSummaryScreenState extends State<SpendingSummaryScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      backgroundColor: const Color(0xFF56D0A0),
+      title: const Text('Spending Summary'),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    ),
+    body: Builder(
+      builder: (context) {
+        if (isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-    if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
+        if (dataMap.isEmpty) {
+          return Center(child: Text((widget.creatorTuple).split(":")[0]));
+        }
 
-    if (dataMap.isEmpty) {
-      return Center(child: Text((widget.creatorTuple).split(":")[0]));
-    }
-
-    return Scaffold(
-          appBar: AppBar(
-          backgroundColor: Color(0xFF56D0A0),
-          title: const Text('Spending Summary'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+        // Main content shown only when not loading and dataMap is not empty
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: dataMap.entries.map((entry) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(entry.key),
+                          Text('₹${entry.value.toStringAsFixed(2)}'),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 40),
+                PieChart(
+                  dataMap: dataMap,
+                  chartRadius: MediaQuery.of(context).size.width / 1.2,
+                  chartType: ChartType.disc,
+                  legendOptions: const LegendOptions(
+                    showLegends: true,
+                    legendPosition: LegendPosition.right,
+                  ),
+                  chartValuesOptions: const ChartValuesOptions(
+                    showChartValuesInPercentage: true,
+                    showChartValues: true,
+                    decimalPlaces: 1,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        body : SingleChildScrollView(
-          child : Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(children: [
-          SizedBox(height : 30),
-          PieChart(
-          dataMap: dataMap,
-          chartRadius: MediaQuery.of(context).size.width / 1.2,
-          chartType: ChartType.disc,
-          legendOptions: const LegendOptions(
-          showLegends: true,
-          legendPosition: LegendPosition.right,
-          ),
-          chartValuesOptions: const ChartValuesOptions(
-          showChartValuesInPercentage: true,
-          showChartValues: true,
-          decimalPlaces: 1,
-        ),
-        ),
-          ],)
-          )
-        )
-    );
-  }
+        );
+      },
+    ),
+  );
 }
 
-
+}
