@@ -192,25 +192,33 @@ class ExpenseData extends State<ExpenseScreen> {
                   ),
               
               DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                icon: Icon(Icons.category),
-                border: OutlineInputBorder(),
-                hintText: 'Select Category',
-              ),
-              value: selectedSubCategory,
-              items: categoryData[objectDropDown]!.map((String item) {
-                return DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(item),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedSubCategory = newValue;
-                  categoryName.text = newValue!; // Store selection in TextEditingController
-                });
-              },
-            ),
+  decoration: const InputDecoration(
+    icon: Icon(Icons.category),
+    border: OutlineInputBorder(),
+    hintText: 'Select Category',
+  ),
+  value: selectedSubCategory,
+  items: (objectDropDown != null && categoryData[objectDropDown]?.isNotEmpty == true)
+      ? categoryData[objectDropDown]!
+          .map((String item) => DropdownMenuItem<String>(
+                value: item,
+                child: Text(item),
+              ))
+          .toList()
+      : [
+          const DropdownMenuItem<String>(
+            value: 'None',
+            child: Text('None'),
+          )
+        ],
+  onChanged: (String? newValue) {
+    setState(() {
+      selectedSubCategory = newValue;
+      categoryName.text = newValue!; // Update the controller
+    });
+  },
+),
+
             SizedBox(height : 20),
                   TextFormField(
                     decoration: const InputDecoration(
