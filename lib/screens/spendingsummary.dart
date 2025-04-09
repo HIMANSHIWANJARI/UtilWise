@@ -14,6 +14,8 @@ class _SpendingSummaryScreenState extends State<SpendingSummaryScreen> {
 
 
 DateTimeRange? _selectedRange;
+Map<String, double> dataMap = {};
+bool isLoading = true;
 
   Future<void> _pickDateRange() async {
     final DateTimeRange? picked = await showDateRangePicker(
@@ -27,6 +29,8 @@ DateTimeRange? _selectedRange;
       setState(() {
         _selectedRange = picked;
       });
+      fetchExpensesData();
+      print(dataMap);
     }
   }
 
@@ -34,14 +38,10 @@ DateTimeRange? _selectedRange;
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
-
-  Map<String, double> dataMap = {};
-  bool isLoading = true;
-
   @override
   void initState() {
     super.initState();
-    fetchExpensesData();
+    //fetchExpensesData();
   }
 
   Future<void> fetchExpensesData() async {
@@ -95,9 +95,25 @@ DateTimeRange? _selectedRange;
         for (var doc in expensesSnapshot.docs) {
           String objectId = doc['ObjectID'];
           double amount =  double.parse(doc['Amount']);
-          String objectName = objectIdToName[objectId] ?? 'Unknown';
+          //String objectName = objectIdToName[objectId] ?? 'Unknown';
+          //tempMap[objectName] = (tempMap[objectName] ?? 0) + amount;
+          if( _selectedRange != null) {
+            DateTime expenseDate = (doc['Date'] as Timestamp).toDate();
+            if (expenseDate.isBefore(_selectedRange!.start) || expenseDate.isAfter(_selectedRange!.end)) {
+              continue;
+          }
+            else
+          {
+              String objectName = objectIdToName[objectId] ?? 'Unknown';
+              tempMap[objectName] = (tempMap[objectName] ?? 0) + amount;
+            }
+          }
+          else
+          {
+            String objectName = objectIdToName[objectId] ?? 'Unknown';
+            tempMap[objectName] = (tempMap[objectName] ?? 0) + amount;
+          }
 
-          tempMap[objectName] = (tempMap[objectName] ?? 0) + amount;
         }
       }
 
@@ -128,14 +144,31 @@ Widget build(BuildContext context) {
         },
       ),
     ),
-    body: Builder(
-      builder: (context) {
-        if (isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    body: Column(
+      children : [
 
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+        SizedBox(height: 20),
+        ElevatedButton(
+        onPressed: _pickDateRange,
+        child: Text('View Spending Summary'),
+        style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        ),
+        backgroundColor: const Color(0xFF56D0A0),
+        elevation: 4,
+        ),
+        ),
+        const SizedBox(height: 20),],
+      ),
+      Builder(
+      builder: (context) {
         if (dataMap.isEmpty) {
-          return Center(child: Text((widget.creatorTuple).split(":")[0]));
+          return Center(child: Text('Choose the dates to see the expense summary'));
         }
 
         // Main content shown only when not loading and dataMap is not empty
@@ -161,42 +194,7 @@ Widget build(BuildContext context) {
                   }).toList(),
                 ),
                 const SizedBox(height: 40),
-                PieChart(
-                  dataMap: dataMap,
-                  chartRadius: MediaQuery.of(context).size.width / 1.2,
-                  chartType: ChartType.disc,
-                  legendOptions: const LegendOptions(
-                    showLegends: true,
-                    legendPosition: LegendPosition.right,
-                  ),
-                  chartValuesOptions: const ChartValuesOptions(
-                    showChartValuesInPercentage: true,
-                    showChartValues: true,
-                    decimalPlaces: 1,
-                  ),
-                ),
-
-                Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _pickDateRange,
-                  child: Text('View Pie-Chart Of Specific date'),
-                  style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  ),
-                  backgroundColor: const Color(0xFF56D0A0),
-                  elevation: 4,
-                  shadowColor: Colors.deepPurpleAccent,
-                  ),
-                ),
-                ],
-                ),
-
-                if (_selectedRange != null) ...[
+              if (_selectedRange != null) ...[
               SizedBox(height: 20),
               Text(
                 'Selected Range:\n${formatDate(start!)} to ${formatDate(end!)}',
@@ -221,6 +219,8 @@ Widget build(BuildContext context) {
         );
       },
     ),
+      ]
+    )
   );
 }
 
