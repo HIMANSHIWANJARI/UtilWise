@@ -12,6 +12,29 @@ class SpendingSummaryScreen extends StatefulWidget {
 
 class _SpendingSummaryScreenState extends State<SpendingSummaryScreen> {
 
+
+DateTimeRange? _selectedRange;
+
+  Future<void> _pickDateRange() async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      initialDateRange: _selectedRange,
+    );
+
+    if (picked != null) {
+      setState(() {
+        _selectedRange = picked;
+      });
+    }
+  }
+
+  String formatDate(DateTime date) {
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  }
+
+
   Map<String, double> dataMap = {};
   bool isLoading = true;
 
@@ -92,6 +115,8 @@ class _SpendingSummaryScreenState extends State<SpendingSummaryScreen> {
 
   @override
 Widget build(BuildContext context) {
+  final start = _selectedRange?.start;
+  final end = _selectedRange?.end;
   return Scaffold(
     appBar: AppBar(
       backgroundColor: const Color(0xFF56D0A0),
@@ -150,7 +175,47 @@ Widget build(BuildContext context) {
                     decimalPlaces: 1,
                   ),
                 ),
-              ],
+
+                Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _pickDateRange,
+                  child: Text('View Pie-Chart Of Specific date'),
+                  style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  ),
+                  backgroundColor: const Color(0xFF56D0A0),
+                  elevation: 4,
+                  shadowColor: Colors.deepPurpleAccent,
+                  ),
+                ),
+                ],
+                ),
+
+                if (_selectedRange != null) ...[
+              SizedBox(height: 20),
+              Text(
+                'Selected Range:\n${formatDate(start!)} to ${formatDate(end!)}',
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 30),
+              PieChart(
+                dataMap: dataMap,
+                chartRadius: MediaQuery.of(context).size.width / 2.2,
+                legendOptions: LegendOptions(
+                  showLegends: true,
+                  legendPosition: LegendPosition.right,
+                ),
+                chartValuesOptions: ChartValuesOptions(
+                  showChartValuesInPercentage: true,
+                ),
+              ),
+            ],
+              ]
             ),
           ),
         );
