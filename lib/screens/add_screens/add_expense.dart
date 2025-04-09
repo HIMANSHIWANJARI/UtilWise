@@ -182,6 +182,7 @@ class ExpenseData extends State<ExpenseScreen> {
                       onChanged: (String? newValue) {
                         setState(() {
                           objectDropDown = newValue!;
+                          selectedSubCategory = null; // Reset selected sub-category
                         });
                         providerCommunity.objectListen(
                             communityDropDown, objectDropDown);
