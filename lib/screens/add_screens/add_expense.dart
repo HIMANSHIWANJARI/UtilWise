@@ -49,9 +49,109 @@ class ExpenseData extends State<ExpenseScreen> {
   late int amount;
   TextEditingController amountInvolved = TextEditingController();
   TextEditingController description = TextEditingController();
+    List<Map<String, dynamic>> memberSplits = [];
+
+  String newMemberPhone = '';
+  String newMemberPercent = '';
 
   // for checkbox state, defaults to false
   bool isViewOnly = false;
+
+  void _openMemberSplitDialog() async {
+  final updatedSplits = await showDialog<List<Map<String, dynamic>>>(
+    context: context,
+    builder: (context) {
+      List<Map<String, dynamic>> tempSplits = List.from(memberSplits);
+      String newName = '';
+      String newPercent = '';
+
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: Text('Add Member Splits'),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(hintText: 'Member name'),
+                          onChanged: (val) => newName = val,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      SizedBox(
+                        width: 60,
+                        child: TextField(
+                          decoration: InputDecoration(hintText: '%'),
+                          keyboardType: TextInputType.number,
+                          onChanged: (val) => newPercent = val,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.add_circle, color: Colors.green),
+                        onPressed: () {
+                          if (newName.trim().isNotEmpty &&
+                              double.tryParse(newPercent) != null) {
+                            setState(() {
+                              tempSplits.add({
+                                'name': newName.trim(),
+                                'percent': double.parse(newPercent),
+                              });
+                              newName = '';
+                              newPercent = '';
+                            });
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  Divider(),
+                  ...tempSplits.map((entry) => ListTile(
+                        title: Text(entry['name']),
+                        trailing: Text('${entry['percent']}%'),
+                      )),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  double total = tempSplits.fold(
+                      0.0, (sum, item) => sum + item['percent']);
+                  if (total > 100.0) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Total percentage exceeds 100%!'),
+                      backgroundColor: Colors.red,
+                    ));
+                    return;
+                  }
+
+                  Navigator.pop(context, tempSplits); // return data to screen
+                },
+                child: Text('Save'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+
+  // ⬅️ This is the key part: update screen state
+  if (updatedSplits != null) {
+    setState(() {
+      memberSplits = updatedSplits;
+    });
+  }
+}
+
 
   @override
   void initState() {
@@ -232,6 +332,39 @@ class ExpenseData extends State<ExpenseScreen> {
                     keyboardType: TextInputType.number,
                     controller: amountInvolved,
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton(
+                  onPressed: _openMemberSplitDialog,
+                  style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  ),
+                  backgroundColor: const Color(0xFF56D0A0),
+                  elevation: 4,
+                ),
+                  child: Text("Add Member Split"),),
+
+if (memberSplits.isNotEmpty) ...[
+  const SizedBox(height: 20),
+  const Text(
+    'Expense Split:',
+    style: TextStyle(fontWeight: FontWeight.bold),
+  ),
+  Column(
+    children: memberSplits.map((entry) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(entry['name'], style: TextStyle(fontSize: 16)),
+          Text('${entry['percent']}%', style: TextStyle(fontSize: 16)),
+        ],
+      );
+    }).toList(),
+  ),
+],
                   SizedBox(
                     height: 10,
                   ),
