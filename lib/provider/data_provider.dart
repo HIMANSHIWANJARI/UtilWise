@@ -499,6 +499,7 @@ class DataProvider extends ChangeNotifier {
           date: expenseTemp[k].date.toString(),
           isViewOnly: expenseTemp[k].isViewOnly,
           category : expenseTemp[k].category,
+          type : expenseTemp[k].type,
         ),
       );
       objectUnresolvedExpenseMapdb![currCommunity]![currObject]!.add(
@@ -671,7 +672,7 @@ class DataProvider extends ChangeNotifier {
       String creatorTuple,
       bool isViewOnly,
       String categoryName,
-      String expenseType
+      String type
       ) async {
     List<String> extractedTupleInfo = creatorTuple.split(':');
     String communityName = extractedTupleInfo[0];
@@ -715,7 +716,7 @@ class DataProvider extends ChangeNotifier {
       date: dateTime,
       isViewOnly: isViewOnly,
       category: categoryName,
-      type: expenseType,
+      type: type,
     );
 
     if (ExpenseDataBaseService.createExpense(expense) == false) {
@@ -733,6 +734,7 @@ class DataProvider extends ChangeNotifier {
         creatorTuple: creatorTuple,
         isViewOnly: isViewOnly,
         category: categoryName,
+        type : type,
       ),
     );
     objectUnresolvedExpenseMapdb![ctmp]![otmp]!.add(expense);
@@ -824,6 +826,7 @@ class DataProvider extends ChangeNotifier {
         creatorTuple: expense.creatorTuple,
         isViewOnly: isViewOnly,
         category : expense.category,
+        type : expense.type,
       ),
     );
 

@@ -13,6 +13,7 @@ class Expense extends StatefulWidget {
   final String creatorTuple;
   final String category;
   final bool isViewOnly;
+  final String type;
 
   const Expense(
       {Key? key,
@@ -25,6 +26,7 @@ class Expense extends StatefulWidget {
       required this.creatorTuple,
       required this.isViewOnly,
       required this.category,
+      required this.type
       })
       : super(key: key);
 
@@ -117,6 +119,7 @@ class _ExpenseState extends State<Expense> {
                   creatorTuple: widget.creatorTuple,
                   isViewOnly: widget.isViewOnly,
                   category: widget.category,
+                  type: widget.type,
                 );
 
                 Navigator.push(

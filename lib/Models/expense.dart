@@ -1,3 +1,5 @@
+import 'package:utilwise/Models/membersplit.dart';
+
 class ExpenseModel {
   String name;
   String? objectID;
@@ -8,6 +10,7 @@ class ExpenseModel {
   bool isViewOnly;
   String category;
   String type;
+  List<MemberSplit>? memberSplits;
 
   ExpenseModel(
       {required this.name,
@@ -19,6 +22,7 @@ class ExpenseModel {
       required this.isViewOnly,
       required this.category,
       required this.type,
+      this.memberSplits,
       });
 
   factory ExpenseModel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +36,11 @@ class ExpenseModel {
       isViewOnly: json['IsViewOnly'] ?? false, // Provide a default value if not present
       category: json['Category'],
       type: json['Type'], // Provide a default value if not present
+      memberSplits: json['MemberSplits'] != null
+          ? (json['MemberSplits'] as List)
+              .map((e) => MemberSplit.fromJson(e))
+              .toList()
+          : [],
     );
   }
 
@@ -45,5 +54,6 @@ class ExpenseModel {
         'IsViewOnly': isViewOnly,
         'Category': category,
         'Type': type,
+        'MemberSplits': memberSplits?.map((e) => e.toJson()).toList(),
       };
 }

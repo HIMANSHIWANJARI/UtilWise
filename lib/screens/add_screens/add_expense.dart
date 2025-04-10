@@ -3,7 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../provider/data_provider.dart';
 
 class ExpenseScreen extends StatefulWidget {
@@ -54,28 +55,128 @@ class ExpenseData extends State<ExpenseScreen> {
   TextEditingController description = TextEditingController();
   List<Map<String, dynamic>> memberSplits = [];
 
-  String newMemberPhone = '';
+  String newMemberEmail = '';
   String newMemberPercent = '';
 
   // for checkbox state, defaults to false
   bool isViewOnly = false;
+  bool isLoading = true;
+  String myEmail = "";
 
   List<String> availableMembers = [
-  '9923456781',
-  '9876543210',
-  '9812547376',
 ];
 
+  Future<List<String>> fetchCommunityMembers(String communityName) async {
+  final firestore = FirebaseFirestore.instance;
+  List<String> memberEmails = [];
+
+  var sharedPref = await SharedPreferences.getInstance();
+  String? myPhone = sharedPref.getString('userPhone');
+
+  try {
+    final communitySnapshot = await firestore
+        .collection('communities')
+        .where('Name', isEqualTo: communityName)
+        .limit(1)
+        .get();
+
+    if (communitySnapshot.docs.isEmpty) {
+      return [];
+    }
+
+    final communityId = communitySnapshot.docs.first.id;
+
+    final memberSnapshot = await firestore
+        .collection('communityMembers')
+        .where('CommunityID', isEqualTo: communityId)
+        .get();
+
+    final userIds = memberSnapshot.docs
+        .map((doc) => doc['UserID'] as String)
+        .toList();
+    for (final userId in userIds) {
+      final userDoc = await firestore.collection('users').doc(userId).get();
+      
+      if (userDoc.exists && userDoc.data()?['Email ID'] != null) {
+        final email = userDoc.data()!['Email ID'];
+        if( myPhone == userDoc.data()!['Phone Number'] ){
+          myEmail = email;
+        }
+        memberEmails.add(email);
+      }
+    }
+
+    return memberEmails;
+  } catch (e) {
+    print('Error fetching member phones: $e');
+    return [];
+  }
+}
+
+
+  Future<void> loadMembers() async {
+  availableMembers = await fetchCommunityMembers((widget.creatorTuple).split(":")[0]);
+  setState(() {
+    isLoading = false;
+  });
+}
+
+
   void _openMemberSplitDialog() async {
+
   final updatedSplits = await showDialog<List<Map<String, dynamic>>>(
     context: context,
     builder: (context) {
       List<Map<String, dynamic>> tempSplits = List.from(memberSplits);
       String? selectedMember;
-      String newPercent = '';
+      TextEditingController percentController = TextEditingController();
 
       return StatefulBuilder(
         builder: (context, setState) {
+          double currentTotal = tempSplits.fold(
+              0.0, (sum, entry) => sum + (entry['percent'] as double));
+
+          void addMember() {
+            final newPercentStr = percentController.text.trim();
+            final newPercent = double.tryParse(newPercentStr);
+            final isDuplicate = tempSplits.any((e) => e['name'] == selectedMember);
+
+            if (selectedMember == null || newPercent == null) return;
+
+            double newTotal = currentTotal + newPercent;
+
+            if (isDuplicate) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('This member is already added.'),
+                backgroundColor: Color(0xFF56D0A0),
+              ));
+              return;
+            }
+
+            if (newTotal > 100) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Total percentage cannot exceed 100%.'),
+                backgroundColor: Color(0xFF56D0A0),
+              ));
+              return;
+            }
+
+            setState(() {
+              tempSplits.add({
+                'name': selectedMember!,
+                'percent': newPercent,
+              });
+              percentController.clear();
+              selectedMember = null;
+            });
+          }
+
+          void removeMember(String name) {
+            setState(() {
+              tempSplits.removeWhere((entry) => entry['name'] == name);
+            });
+          }
+
           return AlertDialog(
             title: Text('Add Member Splits'),
             content: SingleChildScrollView(
@@ -88,15 +189,22 @@ class ExpenseData extends State<ExpenseScreen> {
                         child: DropdownButtonFormField<String>(
                           isExpanded: true,
                           value: selectedMember,
-                          hint: Text("Select Member"),
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                          ),
+                          hint: Text("Select Member", style: TextStyle(fontSize: 14)),
+                          decoration: InputDecoration(border: OutlineInputBorder()),
                           items: availableMembers.map((member) {
-                            return DropdownMenuItem<String>(
-                              value: member,
-                              child: Text(member),
-                            );
+
+                            if( member == myEmail ){
+                              return DropdownMenuItem<String>(
+                                value: member,
+                                child: Text('me (${member})', style: TextStyle(fontSize: 8)),
+                              );
+                            }
+                            else{
+                              return DropdownMenuItem<String>(
+                                value: member,
+                                child: Text(member, style: TextStyle(fontSize: 8)),
+                              );
+                            }
                           }).toList(),
                           onChanged: (value) {
                             setState(() {
@@ -107,35 +215,51 @@ class ExpenseData extends State<ExpenseScreen> {
                       ),
                       SizedBox(width: 10),
                       SizedBox(
-                        width: 60,
+                        width: 30,
                         child: TextField(
+                          controller: percentController,
                           decoration: InputDecoration(hintText: '%'),
                           keyboardType: TextInputType.number,
-                          onChanged: (val) => newPercent = val,
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.add_circle, color: Colors.green),
-                        onPressed: () {
-                          if (selectedMember != null &&
-                              double.tryParse(newPercent) != null) {
-                            setState(() {
-                              tempSplits.add({
-                                'name': selectedMember!,
-                                'percent': double.parse(newPercent),
-                              });
-                              selectedMember = null;
-                              newPercent = '';
-                            });
-                          }
-                        },
+                        icon: Icon(Icons.add_circle, color: Color(0xFF56D0A0), size: 20),
+                        onPressed: addMember,
                       ),
                     ],
                   ),
                   Divider(),
+
+                  // Live total
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Current Total:'),
+                      Text(
+                        '${tempSplits.fold(0.0, (sum, e) => sum + (e['percent'] as double))}%',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: tempSplits.fold(0.0, (sum, e) => sum + (e['percent'] as double)) > 100
+                              ? Colors.red
+                              : Color(0xFF56D0A0),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Member list with delete
                   ...tempSplits.map((entry) => ListTile(
-                        title: Text(entry['name']),
-                        trailing: Text('${entry['percent']}%'),
+                        title: Text(entry['name'],style: TextStyle(fontSize: 10),),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('${entry['percent']}%'),
+                            IconButton(
+                              icon: Icon(Icons.delete, size: 18, color: Colors.red),
+                              onPressed: () => removeMember(entry['name']),
+                            )
+                          ],
+                        ),
                       )),
                 ],
               ),
@@ -146,19 +270,9 @@ class ExpenseData extends State<ExpenseScreen> {
                 child: Text('Cancel'),
               ),
               TextButton(
-                onPressed: () {
-                  double total = tempSplits.fold(
-                      0.0, (sum, item) => sum + item['percent']);
-                  if (total > 100.0) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Total percentage exceeds 100%!'),
-                      backgroundColor: Colors.red,
-                    ));
-                    return;
-                  }
-
-                  Navigator.pop(context, tempSplits); // return data to screen
-                },
+                onPressed: tempSplits.fold(0.0, (sum, item) => sum + item['percent']) > 100.0
+                    ? null // disable Save
+                    : () => Navigator.pop(context, tempSplits),
                 child: Text('Save'),
               ),
             ],
@@ -176,10 +290,13 @@ class ExpenseData extends State<ExpenseScreen> {
 }
 
 
+
+
   @override
   void initState() {
     super.initState();
     dateController.text = "";
+    loadMembers();
   }
 
   @override
