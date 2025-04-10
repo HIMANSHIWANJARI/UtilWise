@@ -139,7 +139,7 @@ class ExpenseData extends State<ExpenseScreen> {
           void addMember() {
             final newPercentStr = percentController.text.trim();
             final newPercent = double.tryParse(newPercentStr);
-            final isDuplicate = tempSplits.any((e) => e['name'] == selectedMember);
+            final isDuplicate = tempSplits.any((e) => e['email'] == selectedMember);
 
             if (selectedMember == null || newPercent == null) return;
 
@@ -163,17 +163,18 @@ class ExpenseData extends State<ExpenseScreen> {
 
             setState(() {
               tempSplits.add({
-                'name': selectedMember!,
+                'email': selectedMember!,
                 'percent': newPercent,
+                'isSettled': false,
               });
               percentController.clear();
               selectedMember = null;
             });
           }
 
-          void removeMember(String name) {
+          void removeMember(String email) {
             setState(() {
-              tempSplits.removeWhere((entry) => entry['name'] == name);
+              tempSplits.removeWhere((entry) => entry['email'] == email);
             });
           }
 
@@ -196,7 +197,7 @@ class ExpenseData extends State<ExpenseScreen> {
                             if( member == myEmail ){
                               return DropdownMenuItem<String>(
                                 value: member,
-                                child: Text('me (${member})', style: TextStyle(fontSize: 8)),
+                                child: Text('me (${member})', style: TextStyle(fontSize: 9)),
                               );
                             }
                             else{
@@ -249,14 +250,15 @@ class ExpenseData extends State<ExpenseScreen> {
 
                   // Member list with delete
                   ...tempSplits.map((entry) => ListTile(
-                        title: Text(entry['name'],style: TextStyle(fontSize: 10),),
+                        title: Text(entry['email'],style: TextStyle(fontSize: 10),),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text('${entry['percent']}%'),
+                            //Text('${entry['isSettled']}'),
                             IconButton(
                               icon: Icon(Icons.delete, size: 18, color: Colors.red),
-                              onPressed: () => removeMember(entry['name']),
+                              onPressed: () => removeMember(entry['email']),
                             )
                           ],
                         ),
@@ -528,7 +530,7 @@ if (expenseType=="Sharable" && memberSplits.isNotEmpty) ...[
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(entry['name'], style: TextStyle(fontSize: 16)),
+          Text(entry['email'], style: TextStyle(fontSize: 16)),
           Text('${entry['percent']}%', style: TextStyle(fontSize: 16)),
         ],
       );
@@ -683,6 +685,7 @@ if (expenseType=="Sharable" && memberSplits.isNotEmpty) ...[
                               isViewOnly,
                               categoryName.text,
                               expenseType,
+                              memberSplits,
                               );
 
                           ScaffoldMessenger.of(context).removeCurrentSnackBar();

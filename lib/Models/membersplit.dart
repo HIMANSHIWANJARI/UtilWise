@@ -11,14 +11,14 @@ class MemberSplit {
 
   factory MemberSplit.fromJson(Map<String, dynamic> json) {
     return MemberSplit(
-      memberEmail: json['MemberPhone'],
+      memberEmail: json['MemberEmail'],
       percent: (json['Percent'] as num).toDouble(),
       isSettled: json['IsSettled'] ?? false,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'MemberPhone': memberEmail,
+        'MemberEmail': memberEmail,
         'Percent': percent,
         'IsSettled': isSettled,
       };

@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../Models/community.dart';
 import '../Models/expense.dart';
+import '../Models/membersplit.dart';
 import '../Models/objects.dart';
 import '../Models/user.dart';
 import '../database/db_communities.dart';
@@ -672,85 +673,179 @@ class DataProvider extends ChangeNotifier {
       String creatorTuple,
       bool isViewOnly,
       String categoryName,
-      String type
+      String type,
+      List<Map<String, dynamic>> memberSplits
       ) async {
-    List<String> extractedTupleInfo = creatorTuple.split(':');
-    String communityName = extractedTupleInfo[0];
-    String creatorPhoneNo = extractedTupleInfo[1];
-    CommunityModel ctmp = communitiesdb!.firstWhere(
-          (element) =>
-      element.name == communityName && element.phoneNo == creatorPhoneNo,
-    );
-    DateTime time = DateTime.now().toLocal();
-    DateTime dateTime = DateTime.parse(expenseDate);
-    expenseDate +=
-        " " +
-            time.hour.toString() +
-            ":" +
-            time.minute.toString() +
-            ":" +
-            time.second.toString() +
-            "." +
-            time.millisecond.toString();
-    dateTime = new DateTime(
-      dateTime.year,
-      dateTime.month,
-      dateTime.day,
-      time.hour,
-      time.minute,
-      time.second,
-      time.millisecond,
-    );
+    
+    if( type == 'Personal' ){
+        List<String> extractedTupleInfo = creatorTuple.split(':');
+        String communityName = extractedTupleInfo[0];
+        String creatorPhoneNo = extractedTupleInfo[1];
+        CommunityModel ctmp = communitiesdb!.firstWhere(
+              (element) =>
+          element.name == communityName && element.phoneNo == creatorPhoneNo,
+        );
+        DateTime time = DateTime.now().toLocal();
+        DateTime dateTime = DateTime.parse(expenseDate);
+        expenseDate +=
+            " " +
+                time.hour.toString() +
+                ":" +
+                time.minute.toString() +
+                ":" +
+                time.second.toString() +
+                "." +
+                time.millisecond.toString();
+        dateTime = new DateTime(
+          dateTime.year,
+          dateTime.month,
+          dateTime.day,
+          time.hour,
+          time.minute,
+          time.second,
+          time.millisecond,
+        );
 
-    ObjectsModel otmp = communityObjectMapdb![ctmp]!.firstWhere(
-          (element) => element.name == objectName,
-    );
+        ObjectsModel otmp = communityObjectMapdb![ctmp]!.firstWhere(
+              (element) => element.name == objectName,
+        );
 
-    String? objectID = await ObjectDataBaseService.getObjectID(otmp);
-    ExpenseModel expense = ExpenseModel(
-      creatorID: await UserDataBaseService.getUserID(user!.phoneNo),
-      amount: amount.toString(),
-      name: description,
-      objectID: objectID,
-      description: "",
-      date: dateTime,
-      isViewOnly: isViewOnly,
-      category: categoryName,
-      type: type,
-    );
+        String? objectID = await ObjectDataBaseService.getObjectID(otmp);
+        ExpenseModel expense = ExpenseModel(
+          creatorID: await UserDataBaseService.getUserID(user!.phoneNo),
+          amount: amount.toString(),
+          name: description,
+          objectID: objectID,
+          description: "",
+          date: dateTime,
+          isViewOnly: isViewOnly,
+          category: categoryName,
+          type: type,
+        );
 
-    if (ExpenseDataBaseService.createExpense(expense) == false) {
-      return false;
+        if (ExpenseDataBaseService.createExpense(expense) == false) {
+          return false;
+        }
+
+        objectUnresolvedExpenseMap[creatorTuple]![objectName]?.add(
+          Expense(
+            objectName: objectName,
+            creator: creator,
+            amount: amount,
+            date: expenseDate,
+            description: description,
+            isPaid: false,
+            creatorTuple: creatorTuple,
+            isViewOnly: isViewOnly,
+            category: categoryName,
+            type : type,
+          ),
+        );
+        objectUnresolvedExpenseMapdb![ctmp]![otmp]!.add(expense);
+        notifyListeners();
+
+        // moved these lines from above add function
+        // removed await
+        ExpenseDataBaseService.ExpenseAddNotification(expense);
+        CommunityDataBaseService.addCommunityLogNotification(
+          ctmp,
+          "Expense Added In ${objectName}: ₹" +
+              amount.toString() +
+              " by ${user?.name}",
+        );
+
+        return true;
     }
 
-    objectUnresolvedExpenseMap[creatorTuple]![objectName]?.add(
-      Expense(
-        objectName: objectName,
-        creator: creator,
-        amount: amount,
-        date: expenseDate,
-        description: description,
-        isPaid: false,
-        creatorTuple: creatorTuple,
-        isViewOnly: isViewOnly,
-        category: categoryName,
-        type : type,
-      ),
-    );
-    objectUnresolvedExpenseMapdb![ctmp]![otmp]!.add(expense);
-    notifyListeners();
+    else{
 
-    // moved these lines from above add function
-    // removed await
-    ExpenseDataBaseService.ExpenseAddNotification(expense);
-    CommunityDataBaseService.addCommunityLogNotification(
-      ctmp,
-      "Expense Added In ${objectName}: ₹" +
-          amount.toString() +
-          " by ${user?.name}",
-    );
+        List<MemberSplit> formattedSplits = memberSplits.map((entry) {
+        return MemberSplit(
+          memberEmail: entry['email'],
+          percent: (entry['percent'] as num).toDouble(),
+          isSettled: entry['isSettled'] ?? false,
+          );
+        }).toList();
 
-    return true;
+        List<String> extractedTupleInfo = creatorTuple.split(':');
+        String communityName = extractedTupleInfo[0];
+        String creatorPhoneNo = extractedTupleInfo[1];
+        CommunityModel ctmp = communitiesdb!.firstWhere(
+              (element) =>
+          element.name == communityName && element.phoneNo == creatorPhoneNo,
+        );
+        DateTime time = DateTime.now().toLocal();
+        DateTime dateTime = DateTime.parse(expenseDate);
+        expenseDate +=
+            " " +
+                time.hour.toString() +
+                ":" +
+                time.minute.toString() +
+                ":" +
+                time.second.toString() +
+                "." +
+                time.millisecond.toString();
+        dateTime = new DateTime(
+          dateTime.year,
+          dateTime.month,
+          dateTime.day,
+          time.hour,
+          time.minute,
+          time.second,
+          time.millisecond,
+        );
+
+        ObjectsModel otmp = communityObjectMapdb![ctmp]!.firstWhere(
+              (element) => element.name == objectName,
+        );
+
+        String? objectID = await ObjectDataBaseService.getObjectID(otmp);
+        ExpenseModel expense = ExpenseModel(
+          creatorID: await UserDataBaseService.getUserID(user!.phoneNo),
+          amount: amount.toString(),
+          name: description,
+          objectID: objectID,
+          description: "",
+          date: dateTime,
+          isViewOnly: isViewOnly,
+          category: categoryName,
+          type: type,
+          memberSplits: formattedSplits,
+        );
+
+        if (ExpenseDataBaseService.createExpense(expense) == false) {
+          return false;
+        }
+
+        objectUnresolvedExpenseMap[creatorTuple]![objectName]?.add(
+          Expense(
+            objectName: objectName,
+            creator: creator,
+            amount: amount,
+            date: expenseDate,
+            description: description,
+            isPaid: false,
+            creatorTuple: creatorTuple,
+            isViewOnly: isViewOnly,
+            category: categoryName,
+            type : type,
+          ),
+        );
+        objectUnresolvedExpenseMapdb![ctmp]![otmp]!.add(expense);
+        notifyListeners();
+
+        // moved these lines from above add function
+        // removed await
+        ExpenseDataBaseService.ExpenseAddNotification(expense);
+        CommunityDataBaseService.addCommunityLogNotification(
+          ctmp,
+          "Expense Added In ${objectName}: ₹" +
+              amount.toString() +
+              " by ${user?.name}",
+        );
+
+        return true;
+    }
   }
 
   Future<bool> updateExpense(Expense expense,
