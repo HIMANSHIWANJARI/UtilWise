@@ -671,6 +671,7 @@ class DataProvider extends ChangeNotifier {
       String creatorTuple,
       bool isViewOnly,
       String categoryName,
+      String expenseType
       ) async {
     List<String> extractedTupleInfo = creatorTuple.split(':');
     String communityName = extractedTupleInfo[0];
@@ -714,6 +715,7 @@ class DataProvider extends ChangeNotifier {
       date: dateTime,
       isViewOnly: isViewOnly,
       category: categoryName,
+      type: expenseType,
     );
 
     if (ExpenseDataBaseService.createExpense(expense) == false) {
@@ -798,6 +800,7 @@ class DataProvider extends ChangeNotifier {
       date: dateTime,
       isViewOnly: isViewOnly,
       category: "",
+      type: "",
     );
 
     if (ExpenseDataBaseService.createExpense(expenseM) == false) {

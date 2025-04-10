@@ -47,9 +47,12 @@ class ExpenseData extends State<ExpenseScreen> {
   String communityDropDown = '';
   String objectDropDown = '';
   late int amount;
+  TextEditingController type = TextEditingController();
+  String expenseType = 'Personal';
+
   TextEditingController amountInvolved = TextEditingController();
   TextEditingController description = TextEditingController();
-    List<Map<String, dynamic>> memberSplits = [];
+  List<Map<String, dynamic>> memberSplits = [];
 
   String newMemberPhone = '';
   String newMemberPercent = '';
@@ -57,12 +60,18 @@ class ExpenseData extends State<ExpenseScreen> {
   // for checkbox state, defaults to false
   bool isViewOnly = false;
 
+  List<String> availableMembers = [
+  '9923456781',
+  '9876543210',
+  '9812547376',
+];
+
   void _openMemberSplitDialog() async {
   final updatedSplits = await showDialog<List<Map<String, dynamic>>>(
     context: context,
     builder: (context) {
       List<Map<String, dynamic>> tempSplits = List.from(memberSplits);
-      String newName = '';
+      String? selectedMember;
       String newPercent = '';
 
       return StatefulBuilder(
@@ -76,9 +85,24 @@ class ExpenseData extends State<ExpenseScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(hintText: 'Member name'),
-                          onChanged: (val) => newName = val,
+                        child: DropdownButtonFormField<String>(
+                          isExpanded: true,
+                          value: selectedMember,
+                          hint: Text("Select Member"),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
+                          items: availableMembers.map((member) {
+                            return DropdownMenuItem<String>(
+                              value: member,
+                              child: Text(member),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedMember = value;
+                            });
+                          },
                         ),
                       ),
                       SizedBox(width: 10),
@@ -93,14 +117,14 @@ class ExpenseData extends State<ExpenseScreen> {
                       IconButton(
                         icon: Icon(Icons.add_circle, color: Colors.green),
                         onPressed: () {
-                          if (newName.trim().isNotEmpty &&
+                          if (selectedMember != null &&
                               double.tryParse(newPercent) != null) {
                             setState(() {
                               tempSplits.add({
-                                'name': newName.trim(),
+                                'name': selectedMember!,
                                 'percent': double.parse(newPercent),
                               });
-                              newName = '';
+                              selectedMember = null;
                               newPercent = '';
                             });
                           }
@@ -144,7 +168,6 @@ class ExpenseData extends State<ExpenseScreen> {
     },
   );
 
-  // ⬅️ This is the key part: update screen state
   if (updatedSplits != null) {
     setState(() {
       memberSplits = updatedSplits;
@@ -295,7 +318,9 @@ class ExpenseData extends State<ExpenseScreen> {
               DropdownButtonFormField<String>(
   decoration: const InputDecoration(
     icon: Icon(Icons.category),
-    border: OutlineInputBorder(),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    ),
     hintText: 'Select Category',
   ),
   value: selectedSubCategory,
@@ -335,19 +360,47 @@ class ExpenseData extends State<ExpenseScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  ElevatedButton(
-                  onPressed: _openMemberSplitDialog,
-                  style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+    DropdownButtonFormField<String>(
+    decoration: InputDecoration(
+      icon: Icon(Icons.people_outline),
+      hintText: 'Expense Type',
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      ),
+    ),
+    value: expenseType,
+    items: ['Sharable', 'Personal'].map((String value) {
+      return DropdownMenuItem<String>(
+        value: value,
+        child: Text(value),
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        setState(() {
+          expenseType = newValue!;
+          type.text = newValue!;
+      });
+    },
+    ),
+                  SizedBox(
+                    height: 12,
                   ),
-                  backgroundColor: const Color(0xFF56D0A0),
-                  elevation: 4,
-                ),
-                  child: Text("Add Member Split"),),
+                  if( expenseType == 'Sharable' )
+                      ElevatedButton(
+                      onPressed: _openMemberSplitDialog,
+                      style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      ),
+                      backgroundColor: const Color(0xFF56D0A0),
+                      elevation: 4,
+                      ),
+                      child: Text("Add Member Split"),),
 
-if (memberSplits.isNotEmpty) ...[
+                  
+
+if (expenseType=="Sharable" && memberSplits.isNotEmpty) ...[
   const SizedBox(height: 20),
   const Text(
     'Expense Split:',
@@ -511,7 +564,9 @@ if (memberSplits.isNotEmpty) ...[
                               description.text,
                               communityDropDown,
                               isViewOnly,
-                              categoryName.text);
+                              categoryName.text,
+                              expenseType,
+                              );
 
                           ScaffoldMessenger.of(context).removeCurrentSnackBar();
 

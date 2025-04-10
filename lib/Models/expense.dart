@@ -7,6 +7,7 @@ class ExpenseModel {
   DateTime? date;
   bool isViewOnly;
   String category;
+  String type;
 
   ExpenseModel(
       {required this.name,
@@ -16,7 +17,9 @@ class ExpenseModel {
       required this.description,
       required this.date,
       required this.isViewOnly,
-      required this.category});
+      required this.category,
+      required this.type,
+      });
 
   factory ExpenseModel.fromJson(Map<String, dynamic> json) {
     return ExpenseModel(
@@ -28,6 +31,7 @@ class ExpenseModel {
       date: json['Date'].toDate(),
       isViewOnly: json['IsViewOnly'] ?? false, // Provide a default value if not present
       category: json['Category'],
+      type: json['Type'], // Provide a default value if not present
     );
   }
 
@@ -40,5 +44,6 @@ class ExpenseModel {
         'Date': date,
         'IsViewOnly': isViewOnly,
         'Category': category,
+        'Type': type,
       };
 }
