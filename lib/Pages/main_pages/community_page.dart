@@ -553,7 +553,6 @@ class _CommunityPageState extends State<CommunityPage> {
                                                                   .creatorTuple,
                                                             ),
                                                           ),
-                                                          // Text(e),
                                                         ],
                                                       ));
                                                 }))
@@ -567,7 +566,6 @@ class _CommunityPageState extends State<CommunityPage> {
                                                         "Hey there! Add your first object in this community using the Add Object button above!",
                                                         style: TextStyle(
                                                           fontSize: 25,
-                                                          // fontWeight: FontWeight.bold,
                                                         )),
                                                   )
                                                 ]

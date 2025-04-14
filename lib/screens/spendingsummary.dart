@@ -168,7 +168,7 @@ Widget build(BuildContext context) {
     elevation: 4,
   ),
   child: Row(
-    mainAxisSize: MainAxisSize.min, // keeps it tight to content
+    mainAxisSize: MainAxisSize.min,
     children: const [
       Icon(Icons.date_range, size: 20),
       SizedBox(width: 8),
