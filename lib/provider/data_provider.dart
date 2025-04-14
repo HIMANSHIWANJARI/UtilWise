@@ -674,7 +674,8 @@ class DataProvider extends ChangeNotifier {
       bool isViewOnly,
       String categoryName,
       String type,
-      List<Map<String, dynamic>> memberSplits
+      List<Map<String, dynamic>> memberSplits,
+      String paidBy,
       ) async {
     
     if( type == 'Personal' ){
@@ -721,6 +722,8 @@ class DataProvider extends ChangeNotifier {
           isViewOnly: isViewOnly,
           category: categoryName,
           type: type,
+          memberSplits: [],
+          paidBy: paidBy,
         );
 
         if (ExpenseDataBaseService.createExpense(expense) == false) {
@@ -739,6 +742,7 @@ class DataProvider extends ChangeNotifier {
             isViewOnly: isViewOnly,
             category: categoryName,
             type : type,
+            
           ),
         );
         objectUnresolvedExpenseMapdb![ctmp]![otmp]!.add(expense);
@@ -758,7 +762,6 @@ class DataProvider extends ChangeNotifier {
     }
 
     else{
-
         List<MemberSplit> formattedSplits = memberSplits.map((entry) {
         return MemberSplit(
           memberEmail: entry['email'],
@@ -811,6 +814,7 @@ class DataProvider extends ChangeNotifier {
           category: categoryName,
           type: type,
           memberSplits: formattedSplits,
+          paidBy: paidBy,
         );
 
         if (ExpenseDataBaseService.createExpense(expense) == false) {
@@ -898,6 +902,8 @@ class DataProvider extends ChangeNotifier {
       isViewOnly: isViewOnly,
       category: "",
       type: "",
+      memberSplits: [],
+      paidBy: "",
     );
 
     if (ExpenseDataBaseService.createExpense(expenseM) == false) {

@@ -28,6 +28,9 @@ class ExpenseData extends State<ExpenseScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController dateController = TextEditingController();
 
+  String? creatorMember;
+  String paidBy = "";
+
   String? selectedSubCategory;  // Stores selected sub-category
   final TextEditingController categoryName = TextEditingController();
   final Map<String, List<String>> categoryData = {
@@ -272,11 +275,12 @@ class ExpenseData extends State<ExpenseScreen> {
                 child: Text('Cancel'),
               ),
               TextButton(
-                onPressed: tempSplits.fold(0.0, (sum, item) => sum + item['percent']) > 100.0
-                    ? null // disable Save
-                    : () => Navigator.pop(context, tempSplits),
-                child: Text('Save'),
-              ),
+  onPressed: currentTotal == 100.0
+      ? () => Navigator.pop(context, tempSplits)
+      : null,
+  child: Text('Save'),
+),
+
             ],
           );
         },
@@ -297,8 +301,9 @@ class ExpenseData extends State<ExpenseScreen> {
   @override
   void initState() {
     super.initState();
-    dateController.text = "";
     loadMembers();
+    dateController.text = "";
+
   }
 
   @override
@@ -434,7 +439,7 @@ class ExpenseData extends State<ExpenseScreen> {
                     height: 10,
                   ),
               
-              DropdownButtonFormField<String>(
+  DropdownButtonFormField<String>(
   decoration: const InputDecoration(
     icon: Icon(Icons.category),
     border: OutlineInputBorder(
@@ -464,7 +469,37 @@ class ExpenseData extends State<ExpenseScreen> {
   },
 ),
 
-            SizedBox(height : 20),
+SizedBox(
+  height: 10,
+),
+DropdownButtonFormField<String>(
+    value: creatorMember,
+    isExpanded: true,
+    decoration: const InputDecoration(
+      icon: Icon(Icons.person),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      ),
+      hintText: ("Select Member"),
+    ),
+    items: (availableMembers.isEmpty )
+        ? [DropdownMenuItem<String>(value: '', child: Text('No members available'))]
+        : availableMembers.map((email) {
+      return DropdownMenuItem<String>(
+        value: email,
+        child: Text(email == myEmail ? 'me ($email)' : email),
+      );
+    }).toList(),
+    onChanged: (String? value) {
+      setState(() {
+
+        creatorMember = value;
+        paidBy = value!;
+      });
+    },
+  ),
+
+            SizedBox(height : 10),
                   TextFormField(
                     decoration: const InputDecoration(
                       icon: Icon(Icons.currency_rupee_outlined),
@@ -488,17 +523,35 @@ class ExpenseData extends State<ExpenseScreen> {
       ),
     ),
     value: expenseType,
-    items: ['Sharable', 'Personal'].map((String value) {
+    items: ['Sharable', 'Personal', 'Share Equally'].map((String value) {
       return DropdownMenuItem<String>(
         value: value,
         child: Text(value),
         );
       }).toList(),
-      onChanged: (String? newValue) {
+      onChanged: (String? newValue) async {
         setState(() {
           expenseType = newValue!;
           type.text = newValue!;
+          memberSplits.clear();
       });
+      if (newValue == "Share Equally") {
+    if (availableMembers.isEmpty) {
+      await loadMembers();
+    }
+
+    double equalSplit = double.parse((100 / availableMembers.length).toStringAsFixed(2));
+
+    setState(() {
+      memberSplits = availableMembers.map((email) {
+        return {
+          'email': email,
+          'percent': equalSplit,
+          'isSettled': false,
+        };
+      }).toList();
+    });
+  }
     },
     ),
                   SizedBox(
@@ -518,6 +571,7 @@ class ExpenseData extends State<ExpenseScreen> {
                       child: Text("Add Member Split"),),
 
                   
+
 
 if (expenseType=="Sharable" && memberSplits.isNotEmpty) ...[
   const SizedBox(height: 20),
@@ -686,6 +740,7 @@ if (expenseType=="Sharable" && memberSplits.isNotEmpty) ...[
                               categoryName.text,
                               expenseType,
                               memberSplits,
+                              paidBy,
                               );
 
                           ScaffoldMessenger.of(context).removeCurrentSnackBar();

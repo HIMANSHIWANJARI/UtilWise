@@ -11,6 +11,7 @@ class ExpenseModel {
   String category;
   String type;
   List<MemberSplit>? memberSplits;
+  String paidBy;
 
   ExpenseModel(
       {required this.name,
@@ -23,6 +24,7 @@ class ExpenseModel {
       required this.category,
       required this.type,
       this.memberSplits,
+      required this.paidBy
       });
 
   factory ExpenseModel.fromJson(Map<String, dynamic> json) {
@@ -33,7 +35,7 @@ class ExpenseModel {
       amount: json['Amount'],
       description: json['Description'],
       date: json['Date'].toDate(),
-      isViewOnly: json['IsViewOnly'] ?? false, // Provide a default value if not present
+      isViewOnly: json['IsViewOnly'] ?? false,
       category: json['Category'],
       type: json['Type'], // Provide a default value if not present
       memberSplits: json['MemberSplits'] != null
@@ -41,6 +43,7 @@ class ExpenseModel {
               .map((e) => MemberSplit.fromJson(e))
               .toList()
           : [],
+      paidBy: json['PaidBy'] ?? '',
     );
   }
 
@@ -55,5 +58,6 @@ class ExpenseModel {
         'Category': category,
         'Type': type,
         'MemberSplits': memberSplits?.map((e) => e.toJson()).toList(),
+        'PaidBy': paidBy,
       };
 }
