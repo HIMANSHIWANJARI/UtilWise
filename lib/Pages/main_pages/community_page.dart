@@ -62,7 +62,7 @@ class _CommunityPageState extends State<CommunityPage> {
       appBar: AppBar(
         backgroundColor: Color(0xFF56D0A0),
         leading: Container(
-          width: 30,
+          width: 25,
           child: IconButton(
             icon: const Icon(
               Icons.menu,
@@ -78,16 +78,16 @@ class _CommunityPageState extends State<CommunityPage> {
         ),
         title: Row(
           children: <Widget>[
-            Image.asset(
-              '${providerCommunity.extractCommunityImagePathByName(widget.creatorTuple)}',
-              width: 20,
-              height: 20,
-            ),
-            SizedBox(width: 5),
+            //Image.asset(
+            //  '${providerCommunity.extractCommunityImagePathByName(widget.creatorTuple)}',
+            //  width: 20,
+            //  height: 20,
+            //),
+            //SizedBox(width: 2),
             Flexible(
                 child: Text(
               (widget.creatorTuple).split(":")[0],
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 18,),
             )),
           ],
         ),
@@ -177,7 +177,7 @@ class _CommunityPageState extends State<CommunityPage> {
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  height: 175,
+                  height: 100,
                   width: 300,
                   margin: const EdgeInsets.only(
                       left: 30, right: 30, top: 20, bottom: 20),
@@ -202,41 +202,41 @@ class _CommunityPageState extends State<CommunityPage> {
                     child: Column(
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Container(
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Container(
-                                    height: 50,
-                                    width: 50,
-                                    child: FloatingActionButton(
-                                      backgroundColor: Color(0xFF56D0A0),
-                                      heroTag: "BTN-5",
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => AddMembers(
-                                                creatorTuple:
-                                                    widget.creatorTuple),
-                                          ),
-                                        );
-                                      },
-                                      child: const Icon(Icons.person_add),
-                                    ),
-                                  ),
-                                  const Text(
-                                    "Add Member",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            //Container(
+                            //  child: Column(
+                            //    mainAxisAlignment:
+                            //        MainAxisAlignment.spaceAround,
+                            //    children: [
+                            //      Container(
+                            //        height: 50,
+                            //        width: 50,
+                            //        child: FloatingActionButton(
+                            //          backgroundColor: Color(0xFF56D0A0),
+                            //          heroTag: "BTN-5",
+                            //          onPressed: () {
+                            //            Navigator.push(
+                            //              context,
+                            //              MaterialPageRoute(
+                            //                builder: (context) => AddMembers(
+                            //                    creatorTuple:
+                            //                        widget.creatorTuple),
+                            //              ),
+                            //            );
+                            //          },
+                            //          child: const Icon(Icons.person_add),
+                            //        ),
+                            //      ),
+                            //      const Text(
+                            //        "Add Member",
+                            //        style: TextStyle(
+                            //          fontSize: 12,
+                            //        ),
+                            //      ),
+                            //    ],
+                            //  ),
+                            //),
                             Container(
                               child: Column(
                                 mainAxisAlignment:
@@ -280,6 +280,38 @@ class _CommunityPageState extends State<CommunityPage> {
                               ),
                             ),
                             Container(
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Container(
+                                      height: 50,
+                                      width: 50,
+                                      child: FloatingActionButton(
+                                        backgroundColor: Color(0xFF56D0A0),
+                                        heroTag: "BTN-9",
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                SpendingSummaryScreen(creatorTuple: widget.creatorTuple),
+                                            ),
+                                          );
+                                        },
+                                        child: const Icon(Icons.insert_chart),
+                                      ),
+                                    ),
+                                    const Text(
+                                      "Insights",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            Container(
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
@@ -306,15 +338,15 @@ class _CommunityPageState extends State<CommunityPage> {
                                         margin: const EdgeInsets.all(8),
                                         child: Row(
                                           children: const [
-                                            Text("+"),
-                                            Icon(Icons.currency_rupee_outlined),
+                                            Text(" "),
+                                            Icon(Icons.payments),
                                           ],
                                         ),
                                       ),
                                     ),
                                   ),
                                   const Text(
-                                    "Add Expense",
+                                    "Settle Up",
                                     style: TextStyle(
                                       fontSize: 12,
                                     ),
@@ -324,102 +356,76 @@ class _CommunityPageState extends State<CommunityPage> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 15),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Container(
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Container(
-                                      height: 50,
-                                      width: 50,
-                                      child: FloatingActionButton(
-                                        backgroundColor: Color(0xFF56D0A0),
-                                        heroTag: "BTN-9",
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RecurringExpensesScreen(
-                                                creatorTuple:
-                                                    widget.creatorTuple,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: const Icon(Icons.repeat),
-                                      ),
-                                    ),
-                                    const Text(
-                                      "Recurring Expenses",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Container(
-                                      height: 50,
-                                      width: 50,
-                                      child: FloatingActionButton(
-                                        backgroundColor: Color(0xFF56D0A0),
-                                        heroTag: "BTN-9",
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                SpendingSummaryScreen(creatorTuple: widget.creatorTuple),
-                                            ),
-                                          );
-                                        },
-                                        child: const Icon(Icons.insert_chart),
-                                      ),
-                                    ),
-                                    const Text(
-                                      "Spending Summary",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ]),
+                        //SizedBox(height: 15),
+                        //Row(
+                        //    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        //    children: [
+                        //      Container(
+                        //        child: Column(
+                        //          mainAxisAlignment:
+                        //              MainAxisAlignment.spaceAround,
+                        //          children: [
+                        //            Container(
+                        //              height: 50,
+                        //              width: 50,
+                        //              child: FloatingActionButton(
+                        //                backgroundColor: Color(0xFF56D0A0),
+                        //                heroTag: "BTN-9",
+                        //                onPressed: () {
+                        //                  Navigator.push(
+                        //                    context,
+                        //                    MaterialPageRoute(
+                        //                      builder: (context) =>
+                        //                          RecurringExpensesScreen(
+                        //                        creatorTuple:
+                        //                            widget.creatorTuple,
+                        //                      ),
+                        //                    ),
+                        //                  );
+                        //                },
+                        //                child: const Icon(Icons.repeat),
+                        //              ),
+                        //            ),
+                        //            const Text(
+                        //              "Recurring Expenses",
+                        //              style: TextStyle(
+                        //                fontSize: 12,
+                        //              ),
+                        //            ),
+                        //          ],
+                        //        ),
+                        //      ),
+                        //
+                        //    ]),
                       ],
                     ),
                   ),
                 ),
-                Container(
-                  margin:
-                      const EdgeInsets.only(left: 30, right: 30, bottom: 10),
-                  child: TextField(
-                    controller: searchController,
-                    decoration: const InputDecoration(
-                      hintText: "Search",
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                      ),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        // clickedObject = 0;
-                        objectName = "";
-                      });
-                    },
-                  ),
+                SizedBox(
+                  height: 10,
                 ),
+                Container(
+  margin: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
+  child: TextField(
+    controller: searchController,
+    style: const TextStyle(fontSize: 14), // smaller text
+    decoration: const InputDecoration(
+      isDense: true, // reduces vertical padding
+      contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 15), // tightens box
+      hintText: "Search",
+      prefixIcon: Icon(Icons.search, size: 20), // optional: smaller icon to match
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+      ),
+    ),
+    onChanged: (value) {
+      setState(() {
+        objectName = "";
+      });
+    },
+  ),
+),
+
                 DefaultTabController(
                     length: 3,
                     child: Column(
@@ -438,7 +444,7 @@ class _CommunityPageState extends State<CommunityPage> {
                               Tab(
                                 icon: Icon(Icons.list),
                               ),
-                              Tab(icon: Icon(Icons.tab))
+                              //Tab(icon: Icon(Icons.tab))
                             ],
                           ),
                         ),
@@ -651,677 +657,6 @@ class _CommunityPageState extends State<CommunityPage> {
                                             : SizedBox(),
                                   ],
                                 ), //Miscellaneous expense
-                                Column(
-                                  children: [
-                                    Text(
-                                      "Category Templates",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Column(
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.all(8),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              Expanded(
-                                                child: Container(
-                                                  // width: 50,
-                                                  // height: 30,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    border: Border.all(
-                                                      color: Color(0xFF56D0A0),
-                                                      width: 2,
-                                                    ),
-                                                    color: Colors.green.shade50,
-                                                    boxShadow: const [
-                                                      BoxShadow(
-                                                        color: Colors.black26,
-                                                        blurRadius: 10,
-                                                        spreadRadius: 1,
-                                                        offset: Offset(0, 2),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    children: [
-                                                      Container(
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceEvenly,
-                                                          children: [
-                                                            Icon(Icons
-                                                                .apartment),
-                                                            Container(
-                                                              child:
-                                                                  Text("Housing Societies"),
-                                                            ),
-                                                            GestureDetector(
-                                                              onTap: () async {
-                                                                ScaffoldMessenger.of(
-                                                                        context)
-                                                                    .showSnackBar(
-                                                                  const SnackBar(
-                                                                      content: Text(
-                                                                          'Adding objects...'),
-                                                                      duration: Duration(
-                                                                          seconds:
-                                                                              3)),
-                                                                );
-
-                                                                bool res1 = await providerCommunity
-                                                                    .addObject(
-                                                                        widget
-                                                                            .creatorTuple,
-                                                                        "Maintenance");
-                                                                bool res2 = await providerCommunity
-                                                                    .addObject(
-                                                                        widget
-                                                                            .creatorTuple,
-                                                                        "Bills");
-                                                                bool res3 = await providerCommunity
-                                                                    .addObject(
-                                                                        widget
-                                                                            .creatorTuple,
-                                                                        "Security");
-                                                                bool res4 = await providerCommunity
-                                                                    .addObject(
-                                                                        widget
-                                                                            .creatorTuple,
-                                                                        "Repairing");
-
-                                                                ScaffoldMessenger.of(
-                                                                        context)
-                                                                    .removeCurrentSnackBar();
-
-                                                                if (res1 &&
-                                                                    res2 &&
-                                                                    res3 &&
-                                                                    res4) {
-                                                                  ScaffoldMessenger.of(
-                                                                          context)
-                                                                      .showSnackBar(
-                                                                    const SnackBar(
-                                                                      content: Text(
-                                                                          'Objects added successfully!'),
-                                                                      duration: Duration(
-                                                                          seconds:
-                                                                              1),
-                                                                    ),
-                                                                  );
-                                                                } else {
-                                                                  ScaffoldMessenger.of(
-                                                                          context)
-                                                                      .showSnackBar(
-                                                                    const SnackBar(
-                                                                      content: Text(
-                                                                          'Error in adding objects!'),
-                                                                      duration: Duration(
-                                                                          seconds:
-                                                                              1),
-                                                                    ),
-                                                                  );
-                                                                }
-                                                              },
-                                                              child: Icon(Icons
-                                                                  .add), // Plus button
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        child: Column(
-                                                          children: [
-                                                            Container(
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceEvenly,
-                                                                children: [
-                                                                  Text("Maintenance"),
-                                                                  Text(
-                                                                      "Bills"),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceEvenly,
-                                                                children: [
-                                                                  Text("Security"),
-                                                                  Text(
-                                                                      "Repairing")
-                                                                ],
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Expanded(
-                                                  child: Container(
-                                                // width: 50,
-                                                // height: 30,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  border: Border.all(
-                                                    color: Color(0xFF56D0A0),
-                                                    width: 2,
-                                                  ),
-                                                  color: Colors.green.shade50,
-                                                  boxShadow: const [
-                                                    BoxShadow(
-                                                      color: Colors.black26,
-                                                      blurRadius: 10,
-                                                      spreadRadius: 1,
-                                                      offset: Offset(0, 2),
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    Container(
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: [
-                                                          Icon(Icons.menu_book),
-                                                          Container(
-                                                            child: Text(
-                                                                "Education"),
-                                                          ),
-                                                          GestureDetector(
-                                                            onTap: () async {
-                                                              ScaffoldMessenger
-                                                                      .of(context)
-                                                                  .showSnackBar(
-                                                                const SnackBar(
-                                                                    content: Text(
-                                                                        'Adding objects...'),
-                                                                    duration: Duration(
-                                                                        seconds:
-                                                                            3)),
-                                                              );
-
-                                                              bool res1 =
-                                                                  await providerCommunity
-                                                                      .addObject(
-                                                                          widget
-                                                                              .creatorTuple,
-                                                                          "Fees");
-                                                              bool res2 = await providerCommunity
-                                                                  .addObject(
-                                                                      widget
-                                                                          .creatorTuple,
-                                                                      "Books");
-                                                              bool res3 = await providerCommunity
-                                                                  .addObject(
-                                                                      widget
-                                                                          .creatorTuple,
-                                                                      "Stationary");
-                                                              bool res4 = await providerCommunity
-                                                                  .addObject(
-                                                                      widget
-                                                                          .creatorTuple,
-                                                                      "Uniform");
-
-                                                              ScaffoldMessenger
-                                                                      .of(context)
-                                                                  .removeCurrentSnackBar();
-
-                                                              if (res1 &&
-                                                                  res2 &&
-                                                                  res3 &&
-                                                                  res4) {
-                                                                ScaffoldMessenger.of(
-                                                                        context)
-                                                                    .showSnackBar(
-                                                                  const SnackBar(
-                                                                    content: Text(
-                                                                        'Objects added successfully!'),
-                                                                    duration: Duration(
-                                                                        seconds:
-                                                                            1),
-                                                                  ),
-                                                                );
-                                                              } else {
-                                                                ScaffoldMessenger.of(
-                                                                        context)
-                                                                    .showSnackBar(
-                                                                  const SnackBar(
-                                                                    content: Text(
-                                                                        'Error in adding objects!'),
-                                                                    duration: Duration(
-                                                                        seconds:
-                                                                            1),
-                                                                  ),
-                                                                );
-                                                              }
-                                                            },
-                                                            child: Icon(Icons
-                                                                .add), // Plus button
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      child: Column(
-                                                        children: [
-                                                          Container(
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceEvenly,
-                                                              children: [
-                                                                Text("Fees"),
-                                                                Text("Books"),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceEvenly,
-                                                              children: [
-                                                                Text(
-                                                                    "Stationary"),
-                                                                Text("Uniform")
-                                                              ],
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ))
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.all(8),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Expanded(
-                                            child: Container(
-                                              // width: 50,
-                                              // height: 30,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                border: Border.all(
-                                                  color: Color(0xFF56D0A0),
-                                                  width: 2,
-                                                ),
-                                                color: Colors.green.shade50,
-                                                boxShadow: const [
-                                                  BoxShadow(
-                                                    color: Colors.black26,
-                                                    blurRadius: 10,
-                                                    spreadRadius: 1,
-                                                    offset: Offset(0, 2),
-                                                  ),
-                                                ],
-                                              ),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  Container(
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Icon(Icons
-                                                            .emoji_food_beverage),
-                                                        Container(
-                                                          child:
-                                                              Text("Family Household"),
-                                                        ),
-                                                        GestureDetector(
-                                                          onTap: () async {
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                              const SnackBar(
-                                                                  content: Text(
-                                                                      'Adding objects...'),
-                                                                  duration:
-                                                                      Duration(
-                                                                          seconds:
-                                                                              3)),
-                                                            );
-
-                                                            bool res1 =
-                                                                await providerCommunity
-                                                                    .addObject(
-                                                                        widget
-                                                                            .creatorTuple,
-                                                                        "Rent");
-
-                                                            bool res2 =
-                                                                await providerCommunity
-                                                                    .addObject(
-                                                                        widget
-                                                                            .creatorTuple,
-                                                                        "Groceries");
-
-                                                            bool res3 = await providerCommunity
-                                                                .addObject(
-                                                                    widget
-                                                                        .creatorTuple,
-                                                                    "Utility Bills");
-
-                                                            bool res4 =
-                                                                await providerCommunity
-                                                                    .addObject(
-                                                                        widget
-                                                                            .creatorTuple,
-                                                                        "Repairs");
-                                                            bool res5 =
-                                                            await providerCommunity
-                                                                .addObject(
-                                                                widget
-                                                                    .creatorTuple,
-                                                                "Subscription");
-
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .removeCurrentSnackBar();
-
-                                                            if (res1 &&
-                                                                res2 &&
-                                                                res3 &&
-                                                                res4 &&
-                                                                res5
-                                                                  ) {
-                                                              ScaffoldMessenger
-                                                                      .of(context)
-                                                                  .showSnackBar(
-                                                                const SnackBar(
-                                                                  content: Text(
-                                                                      'Objects added successfully!'),
-                                                                  duration:
-                                                                      Duration(
-                                                                          seconds:
-                                                                              1),
-                                                                ),
-                                                              );
-                                                            } else {
-                                                              ScaffoldMessenger
-                                                                      .of(context)
-                                                                  .showSnackBar(
-                                                                const SnackBar(
-                                                                  content: Text(
-                                                                      'Error in adding objects!'),
-                                                                  duration:
-                                                                      Duration(
-                                                                          seconds:
-                                                                              1),
-                                                                ),
-                                                              );
-                                                            }
-                                                          },
-                                                          child: Icon(Icons
-                                                              .add), // Plus button
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    child: Column(
-                                                      children: [
-                                                        Container(
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceEvenly,
-                                                            children: [
-                                                              Text("Rent"),
-                                                              Text("Groceries"),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceEvenly,
-                                                            children: [
-                                                              Text(
-                                                                  "Utility Bills"),
-                                                              Text("Repairs")
-                                                            ],
-                                                          ),
-                                                        ),
-
-                                                        Container(
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                            children: [
-                                                              Text(
-                                                                  "Subscriptions")
-                                                            ],
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Expanded(
-                                              child: Container(
-                                            // width: 50,
-                                            // height: 30,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              border: Border.all(
-                                                color: Color(0xFF56D0A0),
-                                                width: 2,
-                                              ),
-                                              color: Colors.green.shade50,
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                  color: Colors.black26,
-                                                  blurRadius: 10,
-                                                  spreadRadius: 1,
-                                                  offset: Offset(0, 2),
-                                                ),
-                                              ],
-                                            ),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                Container(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: [
-                                                      Icon(Icons.shopping_cart),
-                                                      Container(
-                                                        child: Text("Office Teams"),
-                                                      ),
-                                                      GestureDetector(
-                                                        onTap: () async {
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            const SnackBar(
-                                                                content: Text(
-                                                                    'Adding objects...'),
-                                                                duration:
-                                                                    Duration(
-                                                                        seconds:
-                                                                            3)),
-                                                          );
-
-                                                          bool res1 =
-                                                              await providerCommunity
-                                                                  .addObject(
-                                                                      widget
-                                                                          .creatorTuple,
-                                                                      "Office Supplies");
-                                                          bool res2 =
-                                                              await providerCommunity
-                                                                  .addObject(
-                                                                      widget
-                                                                          .creatorTuple,
-                                                                      "Team Lunch");
-                                                          bool res3 =
-                                                              await providerCommunity
-                                                                  .addObject(
-                                                                      widget
-                                                                          .creatorTuple,
-                                                                      "Software Subscriptions");
-                                                          bool res4 =
-                                                              await providerCommunity
-                                                                  .addObject(
-                                                                      widget
-                                                                          .creatorTuple,
-                                                                      "Travel");
-                                                          bool res5 =
-                                                          await providerCommunity
-                                                              .addObject(
-                                                              widget
-                                                                  .creatorTuple,
-                                                              "Events");
-
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .removeCurrentSnackBar();
-
-                                                          if (res1 &&
-                                                              res2 &&
-                                                              res3 &&
-                                                              res4 &&
-                                                              res5) {
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                              const SnackBar(
-                                                                content: Text(
-                                                                    'Objects added successfully!'),
-                                                                duration:
-                                                                    Duration(
-                                                                        seconds:
-                                                                            1),
-                                                              ),
-                                                            );
-                                                          } else {
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                              const SnackBar(
-                                                                content: Text(
-                                                                    'Error in adding objects!'),
-                                                                duration:
-                                                                    Duration(
-                                                                        seconds:
-                                                                            1),
-                                                              ),
-                                                            );
-                                                          }
-                                                        },
-                                                        child: Icon(Icons
-                                                            .add), // Plus button
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Container(
-                                                  child: Column(
-                                                    children: [
-                                                      Container(
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceEvenly,
-                                                          children: [
-                                                            Text("Office Supplies"),
-                                                            Text("Events"),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceEvenly,
-                                                          children: [
-                                                            Text("Team Lunch"),
-
-                                                            Text("Travel")
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                          children: [
-                                                            Text("Software Subscriptions"),
-                                                          ],
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ))
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                )
                               ],
                             )
                         ),
