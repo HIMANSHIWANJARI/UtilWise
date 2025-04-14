@@ -12,6 +12,7 @@ import 'package:utilwise/Pages/main_pages/navigation_page.dart';
 import 'package:utilwise/Pages/main_pages/object_page.dart';
 import 'package:utilwise/Pages/profile_pages/profile_page.dart';
 import 'package:utilwise/screens/add_screens/add-recurring-expense.dart';
+import 'package:utilwise/screens/settleup.dart';
 import 'package:utilwise/screens/spendingsummary.dart';
 
 import '../../components/expense.dart';
@@ -327,10 +328,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                AddFromCommunityPage(
-                                                    selectedPage: 1,
-                                                    creatorTuple:
-                                                        widget.creatorTuple),
+                                                Settleup(creatorTuple: widget.creatorTuple),
                                           ),
                                         );
                                       },
@@ -402,7 +400,7 @@ class _CommunityPageState extends State<CommunityPage> {
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 Container(
   margin: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
@@ -427,7 +425,7 @@ class _CommunityPageState extends State<CommunityPage> {
 ),
 
                 DefaultTabController(
-                    length: 3,
+                    length: 2,
                     child: Column(
                       children: [
                         Container(
@@ -439,10 +437,10 @@ class _CommunityPageState extends State<CommunityPage> {
                             indicatorColor: Color(0xFF56D0A0),
                             tabs: const [
                               Tab(
-                                icon: Icon(Icons.grid_view),
+                                icon: Icon(Icons.grid_view,size:20),
                               ),
                               Tab(
-                                icon: Icon(Icons.list),
+                                icon: Icon(Icons.list,size:20),
                               ),
                               //Tab(icon: Icon(Icons.tab))
                             ],

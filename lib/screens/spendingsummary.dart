@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:intl/intl.dart';
 
 class SpendingSummaryScreen extends StatefulWidget {
   const SpendingSummaryScreen({super.key,required this.creatorTuple});
@@ -34,14 +35,19 @@ bool isLoading = true;
     }
   }
 
-  String formatDate(DateTime date) {
-    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-  }
+String formatDateReadable(DateTime date) {
+  return DateFormat('MMMM d, y').format(date); // e.g., April 14, 2025
+}
 
   @override
   void initState() {
     super.initState();
-    //fetchExpensesData();
+    final now = DateTime.now();
+  final startOfMonth = DateTime(now.year, now.month, 1);
+  final endOfMonth = DateTime(now.year, now.month + 1, 0); // handles month-end
+
+  _selectedRange = DateTimeRange(start: startOfMonth, end: endOfMonth);
+  fetchExpensesData();
   }
 
   Future<void> fetchExpensesData() async {
@@ -136,7 +142,7 @@ Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
       backgroundColor: const Color(0xFF56D0A0),
-      title: const Text('Spending Summary'),
+      title: const Text('Spending Insights'),
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
@@ -151,22 +157,35 @@ Widget build(BuildContext context) {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
         SizedBox(height: 20),
-        ElevatedButton(
-        onPressed: _pickDateRange,
-        child: Text('View Spending Summary'),
-        style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        ),
-        backgroundColor: const Color(0xFF56D0A0),
-        elevation: 4,
-        ),
-        ),
+  ElevatedButton(
+  onPressed: _pickDateRange,
+  style: ElevatedButton.styleFrom(
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+    backgroundColor: const Color(0xFF56D0A0),
+    elevation: 4,
+  ),
+  child: Row(
+    mainAxisSize: MainAxisSize.min, // keeps it tight to content
+    children: const [
+      Icon(Icons.date_range, size: 20),
+      SizedBox(width: 8),
+      Text('Select Date'),
+    ],
+  ),
+),
+
+
         const SizedBox(height: 20),],
       ),
       Builder(
       builder: (context) {
+        if (isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
         if (dataMap.isEmpty) {
           return Center(child: Text('Choose the dates to see the expense summary'));
         }
@@ -197,9 +216,11 @@ Widget build(BuildContext context) {
               if (_selectedRange != null) ...[
               SizedBox(height: 20),
               Text(
-                'Selected Range:\n${formatDate(start!)} to ${formatDate(end!)}',
-                textAlign: TextAlign.center,
-              ),
+            'Spending Summary:\n${formatDateReadable(start!)} to ${formatDateReadable(end!)}',
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 14),
+            ),
+
               SizedBox(height: 30),
               PieChart(
                 dataMap: dataMap,
