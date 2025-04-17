@@ -227,6 +227,17 @@ Future<void> settleAllExpenses() async {
       );
     },
   );
+
+  await FirebaseFirestore.instance.collection('settlements').add({
+  'communityID': communityId,
+  'startDate': lastSettledDate ?? DateTime(2024, 1, 1),
+  'endDate': DateTime.now(),
+  'summary': finalSettlements.map((entry) => {
+    'from': entry['from'],
+    'to': entry['to'],
+    'amount': entry['amount'],
+  }).toList(),
+});
 }
 
 
@@ -272,7 +283,7 @@ Widget build(BuildContext context) {
         Padding(
           padding: const EdgeInsets.only(bottom: 12.0),
           child: Text(
-            "Last settled on: $lastSettledDate ${DateTime.now()}",
+            "Last settled on: $lastSettledDate",
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,

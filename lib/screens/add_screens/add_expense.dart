@@ -65,7 +65,7 @@ class ExpenseData extends State<ExpenseScreen> {
   bool isViewOnly = false;
   bool isLoading = true;
   String myEmail = "";
-
+  
   List<String> availableMembers = [
 ];
 
@@ -104,6 +104,7 @@ class ExpenseData extends State<ExpenseScreen> {
         final email = userDoc.data()!['Email ID'];
         if( myPhone == userDoc.data()!['Phone Number'] ){
           myEmail = email;
+          paidBy = email;
         }
         memberEmails.add(email);
       }
@@ -165,7 +166,7 @@ class ExpenseData extends State<ExpenseScreen> {
             }
 
             setState(() {
-              if( selectedMember != myEmail ){
+              if( selectedMember == paidBy ){
                 tempSplits.add({
                   'email': selectedMember!,
                   'percent': newPercent,
@@ -553,6 +554,14 @@ DropdownButtonFormField<String>(
 
     setState(() {
       memberSplits = availableMembers.map((email) {
+
+        if (email == paidBy) {
+          return {
+            'email': email,
+            'percent': equalSplit,
+            'isSettled': true,
+          };
+        }
         return {
           'email': email,
           'percent': equalSplit,
