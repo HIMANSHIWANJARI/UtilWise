@@ -406,12 +406,12 @@ class _CommunityPageState extends State<CommunityPage> {
   margin: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
   child: TextField(
     controller: searchController,
-    style: const TextStyle(fontSize: 14), // smaller text
+    style: const TextStyle(fontSize: 14),
     decoration: const InputDecoration(
-      isDense: true, // reduces vertical padding
-      contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 15), // tightens box
+      isDense: true,
+      contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
       hintText: "Search",
-      prefixIcon: Icon(Icons.search, size: 20), // optional: smaller icon to match
+      prefixIcon: Icon(Icons.search, size: 20),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(25.0)),
       ),

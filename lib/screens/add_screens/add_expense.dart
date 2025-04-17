@@ -165,11 +165,20 @@ class ExpenseData extends State<ExpenseScreen> {
             }
 
             setState(() {
-              tempSplits.add({
-                'email': selectedMember!,
-                'percent': newPercent,
-                'isSettled': false,
-              });
+              if( selectedMember != myEmail ){
+                tempSplits.add({
+                  'email': selectedMember!,
+                  'percent': newPercent,
+                  'isSettled': true,
+                });
+              }
+              else{
+                tempSplits.add({
+                  'email': selectedMember!,
+                  'percent': newPercent,
+                  'isSettled': false,
+                });
+              }
               percentController.clear();
               selectedMember = null;
             });
@@ -480,7 +489,7 @@ DropdownButtonFormField<String>(
       border: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
       ),
-      hintText: ("Select Member"),
+      hintText: ("Paid By"),
     ),
     items: (availableMembers.isEmpty )
         ? [DropdownMenuItem<String>(value: '', child: Text('No members available'))]
@@ -723,7 +732,6 @@ if (expenseType=="Sharable" && memberSplits.isNotEmpty) ...[
                           }
 
                           // CHANGED HERE
-
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content: Text('Adding Expenses'),
@@ -742,7 +750,7 @@ if (expenseType=="Sharable" && memberSplits.isNotEmpty) ...[
                               memberSplits,
                               paidBy,
                               );
-
+                          memberSplits.clear();
                           ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
                           if (!res) {

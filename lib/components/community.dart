@@ -157,18 +157,20 @@ class _CommunityState extends State<Community> {
                   children: <Widget>[
                     Flexible(
                         child: Container(
-                      decoration: BoxDecoration(
+                        width: 45,
+                        height: 45,
+                        decoration: BoxDecoration(
+                        shape: BoxShape.circle,
                         border: Border.all(
                           color: Colors.green.shade200,
                           width: 1.0,
                         ),
                       ),
-                      child: Image.asset(
-                        '${providerCommunity.extractCommunityImagePathByName(widget.creatorTuple)}',
-                        // 'assets/images/Home.jpg',
-                        width: 45,
-                        height: 45,
-                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          '${providerCommunity.extractCommunityImagePathByName(widget.creatorTuple)}',
+                          fit: BoxFit.cover,
+                        ),),
                     )),
                     
                     Expanded(
@@ -182,7 +184,7 @@ class _CommunityState extends State<Community> {
                           (widget.creatorTuple).split(":")[0],
                           style: const TextStyle(
                             color: Colors.black,
-                            fontSize: 20,
+                            fontSize: 18,
                           ),
                         ),
                         SizedBox(

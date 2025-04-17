@@ -567,6 +567,12 @@ class DataProvider extends ChangeNotifier {
     CommunityModel community = CommunityModel(
       name: communityName,
       phoneNo: user!.phoneNo,
+      //lastSettledDate: DateTime.now(),
+    );
+    CommunityModel community2 = CommunityModel(
+      name: communityName,
+      phoneNo: user!.phoneNo,
+      lastSettledDate: DateTime.now(),
     );
     // creating misc object model here
     String? communityID = await CommunityDataBaseService.getCommunityID(
@@ -579,7 +585,7 @@ class DataProvider extends ChangeNotifier {
       type: "",
       description: "",
     );
-    if (await CommunityDataBaseService.createCommunity(community) == false) {
+    if (await CommunityDataBaseService.createCommunity(community2) == false) {
       return false;
     }
 

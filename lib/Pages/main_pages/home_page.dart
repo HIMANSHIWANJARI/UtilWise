@@ -289,55 +289,60 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
               ),
-              Container(
-                child: DropdownButton<String>(
-                  hint: Text(
-                    'Custom Templates',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  items: <String>[
-                    'Property / Flat',
-                    'Car / Vehicle',
-                    'Education'
-                  ].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    // Navigate to different screen based on selected community
-                    if (newValue == 'Car / Vehicle') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CommunityScreen2(),
-                        ),
-                      );
-                    } else if (newValue == 'Property / Flat') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CommunityScreen3(),
-                        ),
-                      );
-                    } else if (newValue == 'Education') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CommunityScreen4(),
-                        ),
-                      );
-                    }
-                  },
-                ),
+              //Container(
+              //  child: DropdownButton<String>(
+              //    hint: Text(
+              //      'Custom Templates',
+              //      style: TextStyle(fontWeight: FontWeight.bold),
+              //    ),
+              //    items: <String>[
+              //      'Property / Flat',
+              //      'Car / Vehicle',
+              //      'Education'
+              //    ].map((String value) {
+              //      return DropdownMenuItem<String>(
+              //        value: value,
+              //        child: Text(value),
+              //      );
+              //    }).toList(),
+              //    onChanged: (String? newValue) {
+              //      // Navigate to different screen based on selected community
+              //      if (newValue == 'Car / Vehicle') {
+              //        Navigator.push(
+              //          context,
+              //          MaterialPageRoute(
+              //            builder: (context) => CommunityScreen2(),
+              //          ),
+              //        );
+              //      } else if (newValue == 'Property / Flat') {
+              //        Navigator.push(
+              //          context,
+              //          MaterialPageRoute(
+              //            builder: (context) => CommunityScreen3(),
+              //          ),
+              //        );
+              //      } else if (newValue == 'Education') {
+              //        Navigator.push(
+              //          context,
+              //          MaterialPageRoute(
+              //            builder: (context) => CommunityScreen4(),
+              //          ),
+              //        );
+              //      }
+              //    },
+              //  ),
+              //),
+              SizedBox(
+                height: 10,
               ),
               Container(
                 margin: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
                 child: TextField(
                   decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
                     hintText: "Search",
-                    prefixIcon: Icon(Icons.search),
+                    prefixIcon: Icon(Icons.search,size: 20),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
@@ -350,6 +355,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     });
                   },
                 ),
+              ),
+              SizedBox(
+                height: 10,
               ),
               Column(
                   children: communityDataProvider.communities.isEmpty
