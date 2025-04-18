@@ -312,7 +312,7 @@ class ExpenseData extends State<ExpenseScreen> {
   void initState() {
     super.initState();
     loadMembers();
-    dateController.text = "";
+    dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   }
 
@@ -343,6 +343,8 @@ class ExpenseData extends State<ExpenseScreen> {
 
     if (widget.isFromObjectPage) {
       objectDropDown = widget.objectName;
+      selectedSubCategory = categoryData[objectDropDown]!.first;
+      creatorMember = myEmail;
     } else if (providerCommunity
         .communityObjectMap[communityDropDown]!.isNotEmpty) {
       objectDropDown = providerCommunity.communityObjectMap[communityDropDown]![
@@ -439,10 +441,11 @@ class ExpenseData extends State<ExpenseScreen> {
                       onChanged: (String? newValue) {
                         setState(() {
                           objectDropDown = newValue!;
-                          selectedSubCategory = null; // Reset selected sub-category
+                          selectedSubCategory = categoryData[objectDropDown]!.first;
                         });
                         providerCommunity.objectListen(
-                            communityDropDown, objectDropDown);
+                            communityDropDown, objectDropDown
+                        );
                       },
                     ),
                   SizedBox(
@@ -478,38 +481,7 @@ class ExpenseData extends State<ExpenseScreen> {
     });
   },
 ),
-
-SizedBox(
-  height: 10,
-),
-DropdownButtonFormField<String>(
-    value: creatorMember,
-    isExpanded: true,
-    decoration: const InputDecoration(
-      icon: Icon(Icons.person),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-      ),
-      hintText: ("Paid By"),
-    ),
-    items: (availableMembers.isEmpty )
-        ? [DropdownMenuItem<String>(value: '', child: Text('No members available'))]
-        : availableMembers.map((email) {
-      return DropdownMenuItem<String>(
-        value: email,
-        child: Text(email == myEmail ? 'me ($email)' : email),
-      );
-    }).toList(),
-    onChanged: (String? value) {
-      setState(() {
-
-        creatorMember = value;
-        paidBy = value!;
-      });
-    },
-  ),
-
-            SizedBox(height : 10),
+SizedBox(height : 10),
                   TextFormField(
                     decoration: const InputDecoration(
                       icon: Icon(Icons.currency_rupee_outlined),
@@ -521,6 +493,41 @@ DropdownButtonFormField<String>(
                     keyboardType: TextInputType.number,
                     controller: amountInvolved,
                   ),
+SizedBox(
+  height: 10,
+),
+DropdownButtonFormField<String>(
+  value: creatorMember,
+  isExpanded: true,
+  decoration: const InputDecoration(
+    icon: Icon(Icons.person),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    ),
+    hintText: "Paid By",
+  ),
+  items: (availableMembers.isEmpty)
+      ? [
+          const DropdownMenuItem<String>(
+            value: '',
+            child: Text('Loading members ...'),
+          )
+        ]
+      : availableMembers.map((email) {
+          return DropdownMenuItem<String>(
+            value: email,
+            child: Text(email == myEmail ? 'me ($email)' : email),
+          );
+        }).toList(),
+  onChanged: availableMembers.isEmpty
+      ? null
+      : (String? value) {
+          setState(() {
+            creatorMember = value;
+            paidBy = value!;
+          });
+        },
+),
                   SizedBox(
                     height: 10,
                   ),
