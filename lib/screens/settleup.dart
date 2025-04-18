@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:utilwise/Models/expense.dart';
+import 'package:intl/intl.dart';
 
 class Settleup extends StatefulWidget {
 
@@ -198,35 +199,74 @@ Future<void> settleAllExpenses() async {
 
   // Step 5: Show summary in dialog
   showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text("Final Settlements"),
-        content: finalSettlements.isEmpty
-            ? const Text("All expenses already settled 🎉")
-            : SizedBox(
-                width: double.maxFinite,
-                child: ListView(
-                  shrinkWrap: true,
-                  children: finalSettlements.map((settle) {
-                    return ListTile(
-                      title: Text("${settle['from']} pays ${settle['to']} ₹${settle['amount'].toStringAsFixed(2)}"),
-                    );
-                  }).toList(),
-                ),
-              ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              loadSplits(); // Refresh UI
-            },
-            child: const Text("Close"),
-          )
+  context: context,
+  builder: (context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      title: Row(
+        children: const [
+          Icon(Icons.receipt_long, color: Color(0xFF56D0A0)),
+          SizedBox(width: 8),
+          Text(
+            "Final Settlements",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
         ],
-      );
-    },
-  );
+      ),
+      content: finalSettlements.isEmpty
+          ? const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: Text(
+                "All expenses already settled 🎉",
+                style: TextStyle(fontSize: 14),
+              ),
+            )
+          : SizedBox(
+              width: double.maxFinite,
+              height: 300,
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: finalSettlements.length,
+                separatorBuilder: (_, __) => const Divider(height: 10),
+                itemBuilder: (context, index) {
+                  final entry = finalSettlements[index];
+                  return Row(
+                    children: [
+                      const Icon(Icons.circle, size: 6, color: Colors.grey),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          "${entry['from']} pays ${entry['to']} ₹${(entry['amount'] as num).toStringAsFixed(2)}",
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+      actions: [
+        TextButton.icon(
+          onPressed: () {
+            Navigator.of(context).pop();
+            loadSplits();
+          },
+          icon: const Icon(Icons.close),
+          label: const Text("Close"),
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: const Color(0xFF56D0A0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          ),
+        ),
+      ],
+    );
+  },
+);
+
 
   await FirebaseFirestore.instance.collection('settlements').add({
   'communityID': communityId,
@@ -245,16 +285,6 @@ Future<void> settleAllExpenses() async {
     @override
 Widget build(BuildContext context) {
   return Scaffold(
-    appBar: AppBar(
-      backgroundColor: const Color(0xFF56D0A0),
-      title: const Text('Settle Dues'),
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-    ),
   body: isLoading
     ? const Center(child: CircularProgressIndicator())
     : owedSummaries.isEmpty
@@ -262,9 +292,9 @@ Widget build(BuildContext context) {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.celebration, size: 48, color: Colors.green),
+                Icon(Icons.celebration, size: 48, color: Color(0xFF56D0A0)),
                 SizedBox(height: 10),
-                Text("No pending splits 🎉",
+                Text("No pending splits",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
               ],
             ),
@@ -274,22 +304,30 @@ Widget build(BuildContext context) {
   child: Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      ElevatedButton(
-      onPressed: settleAllExpenses,
-      style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF56D0A0)),
-      child: const Text("Settle All", style: TextStyle(color: Colors.white)),
-      ),
+      Center(
+  child: ElevatedButton(
+    onPressed: settleAllExpenses,
+    style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF56D0A0)),
+    child: const Text(
+      "Settle All Bills Today",
+      style: TextStyle(color: Colors.white),
+    ),
+  ),
+),
+SizedBox(height: 20),
+
       if (lastSettledDate != null)
         Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
+          padding: const EdgeInsets.only(bottom: 12.0,),
+          child: Center(
           child: Text(
-            "Last settled on: $lastSettledDate",
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey,
-            ),
-          ),
+          "All Unsettled Bills from ${DateFormat('d MMM yyyy').format(lastSettledDate!)}",
+          style: const TextStyle(
+          fontSize: 14,
+        ),
+  ),
+)
+
         ),
       Expanded(
         child: ListView.builder(

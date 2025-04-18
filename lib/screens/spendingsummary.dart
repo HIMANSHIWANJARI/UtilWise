@@ -142,7 +142,7 @@ Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
       backgroundColor: const Color(0xFF56D0A0),
-      title: const Text('Spending Insights'),
+      title: const Text('Spending Insights',style: TextStyle(fontSize: 16),),
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {

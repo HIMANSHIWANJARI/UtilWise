@@ -12,7 +12,7 @@ import 'package:utilwise/Pages/main_pages/navigation_page.dart';
 import 'package:utilwise/Pages/main_pages/object_page.dart';
 import 'package:utilwise/Pages/profile_pages/profile_page.dart';
 import 'package:utilwise/screens/add_screens/add-recurring-expense.dart';
-import 'package:utilwise/screens/settleup.dart';
+import 'package:utilwise/screens/settle.dart';
 import 'package:utilwise/screens/spendingsummary.dart';
 
 import '../../components/expense.dart';
@@ -328,7 +328,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                Settleup(creatorTuple: widget.creatorTuple),
+                                                SettlePage(creatorTuple: widget.creatorTuple),
                                           ),
                                         );
                                       },
