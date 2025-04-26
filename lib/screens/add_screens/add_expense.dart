@@ -596,27 +596,48 @@ DropdownButtonFormField<String>(
                       ),
                       child: Text("Add Member Split"),),
 
-                  
-
-
-if (expenseType=="Sharable" && memberSplits.isNotEmpty) ...[
+if (expenseType == "Sharable" && memberSplits.isNotEmpty) ...[
   const SizedBox(height: 20),
   const Text(
     'Expense Split:',
-    style: TextStyle(fontWeight: FontWeight.bold),
+    style: TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    ),
   ),
+  const SizedBox(height: 10),
   Column(
     children: memberSplits.map((entry) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(entry['email'], style: TextStyle(fontSize: 16)),
-          Text('${entry['percent']}%', style: TextStyle(fontSize: 16)),
-        ],
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                entry['email'],
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Text(
+              "${entry['percent']}%",
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
       );
     }).toList(),
   ),
 ],
+
+
                   SizedBox(
                     height: 10,
                   ),
