@@ -57,6 +57,7 @@ class ExpenseData extends State<ExpenseScreen> {
   TextEditingController amountInvolved = TextEditingController();
   TextEditingController description = TextEditingController();
   List<Map<String, dynamic>> memberSplits = [];
+  List<Map<String, dynamic>> memberSplits2 = [];
 
   String newMemberEmail = '';
   String newMemberPercent = '';
@@ -344,7 +345,7 @@ class ExpenseData extends State<ExpenseScreen> {
     if (widget.isFromObjectPage) {
       objectDropDown = widget.objectName;
       selectedSubCategory = categoryData[objectDropDown]!.first;
-      creatorMember = myEmail;
+      //creatorMember = myEmail;
     } else if (providerCommunity
         .communityObjectMap[communityDropDown]!.isNotEmpty) {
       objectDropDown = providerCommunity.communityObjectMap[communityDropDown]![
@@ -560,7 +561,7 @@ DropdownButtonFormField<String>(
     double equalSplit = double.parse((100 / availableMembers.length).toStringAsFixed(2));
 
     setState(() {
-      memberSplits = availableMembers.map((email) {
+      memberSplits2 = availableMembers.map((email) {
 
         if (email == paidBy) {
           return {
@@ -752,7 +753,10 @@ if (expenseType=="Sharable" && memberSplits.isNotEmpty) ...[
                               const SnackBar(
                                   content: Text('Adding Expenses'),
                                   duration: Duration(seconds: 8)));
-
+                          
+                          if( expenseType == "Share Equally" ){
+                            memberSplits = memberSplits2;
+                          }
                           bool res = await providerCommunity.addExpense(
                               objectDropDown,
                               providerCommunity.user!.name,

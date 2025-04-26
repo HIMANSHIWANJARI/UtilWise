@@ -69,6 +69,7 @@ class _RequestListPageState extends State<RequestListPage> {
                           if (success) {
                             setState(() {
                               _requestsFuture = provider.fetchAllRequests(userPhoneNumber);
+                              
                             });
                             ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text("Request approved"))

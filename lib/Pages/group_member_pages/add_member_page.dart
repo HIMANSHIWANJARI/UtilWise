@@ -25,7 +25,7 @@ class _AddMemberState extends State<AddMembers> {
   TextEditingController countryController = TextEditingController();
   String phone = "";
   bool isLoading = false;
-
+  
   @override
   void initState() {
     countryController.text = "  +91";
@@ -212,6 +212,7 @@ class _AddMemberState extends State<AddMembers> {
                                             await providerCommunity
                                                 .createRequest(
                                                 widget.creatorTuple, phone);
+                                        phone = "";
 
                                         scaffoldMessenger.showSnackBar(
                                           SnackBar(

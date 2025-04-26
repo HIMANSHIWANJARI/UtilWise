@@ -14,8 +14,9 @@ class Settleup extends StatefulWidget {
 
 class _SettleupState extends State<Settleup> {
 
-
+  List<Map<String, dynamic>> unsettledExpenses = [];
   DateTime? lastSettledDate;
+  bool isSettling = false;
 
   List<String> owedSummaries = [];
   bool isLoading = true;
@@ -25,7 +26,7 @@ class _SettleupState extends State<Settleup> {
     loadSplits();
   }
 
-  Future<void> loadSplits() async {
+Future<void> loadSplits() async {
   final firestore = FirebaseFirestore.instance;
   final communitySnapshot = await firestore
       .collection('communities')
@@ -42,7 +43,7 @@ class _SettleupState extends State<Settleup> {
       .get();
   final objectIDs = objectsSnapshot.docs.map((doc) => doc.id).toList();
 
-  List<String> results = [];
+  List<Map<String, dynamic>> results = [];
 
   if (objectIDs.isEmpty) {
     setState(() {
@@ -51,7 +52,6 @@ class _SettleupState extends State<Settleup> {
     return;
   }
 
-  // Firestore limits whereIn to 10 values
   for (int i = 0; i < objectIDs.length; i += 10) {
     final batch = objectIDs.skip(i).take(10).toList();
 
@@ -64,25 +64,38 @@ class _SettleupState extends State<Settleup> {
 
     for (var doc in expensesSnapshot.docs) {
       final expense = ExpenseModel.fromJson(doc.data());
-      final paidBy = expense.paidBy;
-      final totalAmount = double.tryParse(expense.amount) ?? 0;
+      bool hasUnsettled = false;
 
       for (var split in expense.memberSplits ?? []) {
-        if (!split.isSettled && split.memberEmail != paidBy) {
-          final owedAmount = totalAmount * (split.percent / 100);
-          results.add("${split.memberEmail} owes $paidBy ₹${owedAmount.toStringAsFixed(2)}");
+        if (!split.isSettled) {
+          hasUnsettled = true;
+          break;
         }
+      }
+
+      if (hasUnsettled) {
+        results.add({
+          'paidBy': expense.paidBy,
+          'date': expense.date,
+          'amount': expense.amount,
+          'memberSplits': expense.memberSplits,
+        });
       }
     }
   }
 
   setState(() {
-    owedSummaries = results;
+    unsettledExpenses = results;
     isLoading = false;
   });
 }
+
   
 Future<void> settleAllExpenses() async {
+  if (isSettling) return;
+  setState(() {
+    isSettling = true;
+  });
   final firestore = FirebaseFirestore.instance;
   final communitySnapshot = await firestore
       .collection('communities')
@@ -287,7 +300,7 @@ Widget build(BuildContext context) {
   return Scaffold(
   body: isLoading
     ? const Center(child: CircularProgressIndicator())
-    : owedSummaries.isEmpty
+    : unsettledExpenses.isEmpty
         ? const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -304,25 +317,30 @@ Widget build(BuildContext context) {
   child: Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Center(
+    SizedBox(height: 20),
+    Center(
   child: ElevatedButton(
-    onPressed: settleAllExpenses,
+    //onPressed: settleAllExpenses,
+    onPressed: isSettling ? null : settleAllExpenses,
+
     style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF56D0A0)),
     child: const Text(
-      "Settle All Bills Today",
+      "Settle All Unsettled Expenses",
       style: TextStyle(color: Colors.white),
     ),
   ),
 ),
-SizedBox(height: 20),
+SizedBox(height: 30),
 
       if (lastSettledDate != null)
         Padding(
           padding: const EdgeInsets.only(bottom: 12.0,),
           child: Center(
           child: Text(
-          "All Unsettled Bills from ${DateFormat('d MMM yyyy').format(lastSettledDate!)}",
+          "All Unsettled Expenses from ${DateFormat('d MMM yyyy').format(lastSettledDate!)}",
           style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Color(0xFF56D0A0),
           fontSize: 14,
         ),
   ),
@@ -330,36 +348,76 @@ SizedBox(height: 20),
 
         ),
       Expanded(
-        child: ListView.builder(
-          itemCount: owedSummaries.length,
-          itemBuilder: (context, index) {
-            final data = owedSummaries[index].split(" owes ");
-            final from = data[0];
-            final rest = data[1].split(" ₹");
-            final to = rest[0];
-            final amount = rest[1];
+  child: ListView.builder(
+    itemCount: unsettledExpenses.length,
+    itemBuilder: (context, index) {
+      final expense = unsettledExpenses[index];
+      final paidBy = expense['paidBy'];
+      final amount = expense['amount'];
+      final date = expense['date'] as DateTime? ?? DateTime.now();
+      final splits = expense['memberSplits'] as List<dynamic>;
 
-            return Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              child: ListTile(
-                leading: const CircleAvatar(
-                  radius: 16,
-                  backgroundColor: Color(0xFF56D0A0),
-                  child: Icon(Icons.currency_rupee, color: Colors.white, size: 15),
-                ),
-                title: Text("$from owes $to",
-                    style: const TextStyle(fontSize: 11)),
-                subtitle: Text("Amount: ₹$amount",
-                    style: const TextStyle(fontSize: 11)),
-              ),
-            );
-          },
+      return Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(
+          color: Colors.green, // light gray border color
+          width: 1, // thickness of the border
+    ),
         ),
-      ),
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Paid by: $paidBy",
+                style: const TextStyle( fontSize: 12),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                "Date: ${DateFormat('d MMM yyyy').format(date)}",
+              style: const TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                "Total Amount: ₹$amount",
+                style: const TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                "Splits:",
+                style: TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 6),
+              ...splits.map((split) {
+                final memberEmail = split.memberEmail;
+                final percent = split.percent;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.circle, size: 6, color: Colors.grey),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          "$memberEmail has ${percent.toStringAsFixed(1)}% ${'Share'} ",
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ],
+          ),
+        ),
+      );
+    },
+  ),
+),
     ],
   ),
 )

@@ -45,7 +45,7 @@ Widget build(BuildContext context) {
               Tab(
               icon: Icon(Icons.list_alt, size: 20),
               child: Text(
-              "Summary",
+              "Settlements",
               style: TextStyle(fontSize: 12),
               ),
 ),
