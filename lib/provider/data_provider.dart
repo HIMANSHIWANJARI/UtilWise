@@ -1300,7 +1300,7 @@ class DataProvider extends ChangeNotifier {
 
     notifyListeners();
 
-    return (false, 'User added successfully');
+    return (false, 'Request Sent Successfully!');
   }
 
   Future<bool> acceptRequest(String communityID, String phoneNo) async {

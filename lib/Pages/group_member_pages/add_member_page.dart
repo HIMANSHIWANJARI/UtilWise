@@ -23,6 +23,7 @@ class _AddMemberState extends State<AddMembers> {
   var selectedContacts = [];
 
   TextEditingController countryController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   String phone = "";
   bool isLoading = false;
   
@@ -149,7 +150,9 @@ class _AddMemberState extends State<AddMembers> {
                             width: 10,
                           ),
                           Expanded(
+
                               child: TextField(
+                                controller: phoneController,
                             onChanged: (value) {
                               phone = value;
                             },
@@ -212,8 +215,7 @@ class _AddMemberState extends State<AddMembers> {
                                             await providerCommunity
                                                 .createRequest(
                                                 widget.creatorTuple, phone);
-                                        phone = "";
-
+                                        phoneController.clear();
                                         scaffoldMessenger.showSnackBar(
                                           SnackBar(
                                               content: Text(message),

@@ -13,13 +13,24 @@ class _RequestListPageState extends State<RequestListPage> {
   @override
   void initState() {
     super.initState();
+    _loadRequests();
+  }
+
+  Future<List<(String, String)>> getRequests() async {
     final provider = Provider.of<DataProvider>(context, listen: false);
     final String? userPhoneNumber = provider.user?.phoneNo;
 
     if (userPhoneNumber != null) {
-      _requestsFuture = provider.fetchAllRequests(userPhoneNumber);
+      return await provider.fetchAllRequests(userPhoneNumber);
+    } else {
+      return [];
     }
   }
+
+  void _loadRequests() {
+    _requestsFuture = getRequests();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -66,13 +77,16 @@ class _RequestListPageState extends State<RequestListPage> {
                         icon: Icon(Icons.check, color: Colors.green),
                         onPressed: () async {
                           bool success = await provider.acceptRequest(communityId, userPhoneNumber);
+
                           if (success) {
                             setState(() {
                               _requestsFuture = provider.fetchAllRequests(userPhoneNumber);
-                              
+
                             });
+
+
                             ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Request approved"))
+                                SnackBar(content: Text("You are added to the community"))
                             );
                           }
                         },
@@ -84,6 +98,8 @@ class _RequestListPageState extends State<RequestListPage> {
                           setState(() {
                             _requestsFuture = provider.fetchAllRequests(userPhoneNumber);
                           });
+
+
                           ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text("Request rejected"))
                           );
