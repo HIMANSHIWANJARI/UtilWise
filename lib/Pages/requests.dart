@@ -79,11 +79,10 @@ class _RequestListPageState extends State<RequestListPage> {
                           bool success = await provider.acceptRequest(communityId, userPhoneNumber);
 
                           if (success) {
+
                             setState(() {
-                              _requestsFuture = provider.fetchAllRequests(userPhoneNumber);
-
+                              _loadRequests();
                             });
-
 
                             ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text("You are added to the community"))
@@ -96,7 +95,7 @@ class _RequestListPageState extends State<RequestListPage> {
                         onPressed: () async {
                           await provider.deleteRequest(communityId, userPhoneNumber);
                           setState(() {
-                            _requestsFuture = provider.fetchAllRequests(userPhoneNumber);
+                            _loadRequests();
                           });
 
 
