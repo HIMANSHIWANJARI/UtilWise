@@ -79,6 +79,7 @@ class _RequestListPageState extends State<RequestListPage> {
                           bool success = await provider.acceptRequest(communityId, userPhoneNumber);
 
                           if (success) {
+                            await Future.delayed(Duration(milliseconds: 300));
 
                             setState(() {
                               _loadRequests();
@@ -94,6 +95,8 @@ class _RequestListPageState extends State<RequestListPage> {
                         icon: Icon(Icons.close, color: Colors.red),
                         onPressed: () async {
                           await provider.deleteRequest(communityId, userPhoneNumber);
+                          await Future.delayed(Duration(milliseconds: 300));
+
                           setState(() {
                             _loadRequests();
                           });
