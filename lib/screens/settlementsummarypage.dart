@@ -54,13 +54,21 @@ class _SettlementsummarypageState extends State<Settlementsummarypage> {
                 final dateFormat = DateFormat('d MMM yyyy');
                 return Card(
                   margin: const EdgeInsets.all(10),
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: BorderSide(
+                  color: Colors.green, // light gray border color
+                  width: 1, // thickness of the border
+                ),
+        ),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("From: ${dateFormat.format(startDate)}",style: const TextStyle(fontSize: 11),),
-                        Text("To: ${dateFormat.format(endDate)}",style: const TextStyle(fontSize: 11),),
+                        Text("From: ${dateFormat.format(startDate)}, To: ${dateFormat.format(endDate)} ",style: const TextStyle(fontSize: 11),),
+                        //Text("To ${dateFormat.format(endDate)}",style: const TextStyle(fontSize: 11),),
                         const SizedBox(height: 10),
                         ...summary.map((entry) => Text(
                         "• ${entry['from']} owes ${entry['to']} ₹${(entry['amount'] as num).toStringAsFixed(2)}",

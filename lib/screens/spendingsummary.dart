@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../../provider/data_provider.dart';
 
 class SpendingSummaryScreen extends StatefulWidget {
   const SpendingSummaryScreen({super.key,required this.creatorTuple});
@@ -137,12 +140,28 @@ String formatDateReadable(DateTime date) {
 
   @override
 Widget build(BuildContext context) {
+  final providerCommunity = Provider.of<DataProvider>(context, listen: false);
   final start = _selectedRange?.start;
   final end = _selectedRange?.end;
   return Scaffold(
     appBar: AppBar(
       backgroundColor: const Color(0xFF56D0A0),
-      title: const Text('Spending Insights',style: TextStyle(fontSize: 16),),
+      title: Row(
+            children: <Widget>[
+              Image.asset(
+                '${providerCommunity.extractCommunityImagePathByName(widget.creatorTuple)}',
+                width: 40,
+                height: 40,
+              ),
+              SizedBox(width: 10),
+              Flexible(
+                  child: Text(
+                (widget.creatorTuple).split(":")[0],
+                style: TextStyle(fontSize: 18,),
+                overflow: TextOverflow.ellipsis,
+              )),
+            ],
+          ),
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {

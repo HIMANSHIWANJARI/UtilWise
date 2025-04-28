@@ -37,9 +37,10 @@ class _AddFromCommunityPageData extends State<AddFromCommunityPage> {
               SizedBox(width: 10),
               Flexible(
                   child: Text(
-                (widget.creatorTuple).split(":")[0],
-                overflow: TextOverflow.ellipsis,
-              )),
+                    (widget.creatorTuple).split(":")[0],
+                    style: TextStyle(fontSize: 18,),
+                    overflow: TextOverflow.ellipsis,
+                  )),
             ],
           ),
           bottom: const TabBar(
