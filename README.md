@@ -26,8 +26,10 @@
 
 ## Screenshots
 - Login Screen
-  ![WhatsApp Image 2025-05-11 at 23 06 50_9346a74e](https://github.com/user-attachments/assets/02967631-78d8-4997-b07c-22603e58d004)
-  ![WhatsApp Image 2025-05-11 at 23 06 50_a2cec440](https://github.com/user-attachments/assets/736e1a69-cd6c-4f6a-86fd-c236af919a49)
+- <p align="center">
+  <img src="https://github.com/user-attachments/assets/02967631-78d8-4997-b07c-22603e58d004" width="250"/>
+  <img src="https://github.com/user-attachments/assets/736e1a69-cd6c-4f6a-86fd-c236af919a49" width="250"/>
+</p>
 - Dashboard
   ![WhatsApp Image 2025-05-11 at 21 57 23_d940ecee](https://github.com/user-attachments/assets/b9b0a063-c18d-43e6-b25e-9b2d78b809fc)
   ![WhatsApp Image 2025-05-12 at 19 47 45_fd3b45a3](https://github.com/user-attachments/assets/a689b80e-6a96-40cd-9699-453820e72b4e)
@@ -68,7 +70,7 @@ lib/
    flutter pub get
    ```
 3. Run the app:
-  ```bash
+   ```bash
    flutter run
    ```
 
