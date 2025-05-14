@@ -26,14 +26,17 @@
 
 ## Screenshots
 - Login Screen
-- <p align="center">
+  <p align="center">
   <img src="https://github.com/user-attachments/assets/02967631-78d8-4997-b07c-22603e58d004" width="250"/>
   <img src="https://github.com/user-attachments/assets/736e1a69-cd6c-4f6a-86fd-c236af919a49" width="250"/>
-</p>
-- Dashboard
-  ![WhatsApp Image 2025-05-11 at 21 57 23_d940ecee](https://github.com/user-attachments/assets/b9b0a063-c18d-43e6-b25e-9b2d78b809fc)
-  ![WhatsApp Image 2025-05-12 at 19 47 45_fd3b45a3](https://github.com/user-attachments/assets/a689b80e-6a96-40cd-9699-453820e72b4e)
-  ![WhatsApp Image 2025-05-12 at 19 47 45_4ac57163](https://github.com/user-attachments/assets/31e0473c-16d0-46c2-b3e3-63cbf9dec704)
+ </p>
+ 
+- Home Screen
+  <p align="center">
+  <img src="https://github.com/user-attachments/assets/b9b0a063-c18d-43e6-b25e-9b2d78b809fc" width="250"/>
+  <img src="https://github.com/user-attachments/assets/a689b80e-6a96-40cd-9699-453820e72b4e" width="250"/>
+  <img src="https://github.com/user-attachments/assets/31e0473c-16d0-46c2-b3e3-63cbf9dec704" width="250"/>
+ </p>
 - Community Screen
   ![WhatsApp Image 2025-05-11 at 21 57 23_ad409007](https://github.com/user-attachments/assets/3ce0845e-8ed4-43f7-b4bd-a593cbc826d7)
   ![WhatsApp Image 2025-05-11 at 22 50 53_5d73ffb3](https://github.com/user-attachments/assets/577d7dd8-a867-44d1-8dab-24c4c4f2d4bb)
