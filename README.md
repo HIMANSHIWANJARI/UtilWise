@@ -63,7 +63,9 @@
 
 ---
 
+
 ## Project Structure
+
 lib/
 │
 ├── assets/ # Images and icons
