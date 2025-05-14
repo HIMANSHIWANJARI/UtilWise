@@ -1,4 +1,4 @@
-![WhatsApp Image 2025-05-11 at 22 50 53_4d89ec91](https://github.com/user-attachments/assets/27cf3ad3-689e-4c18-a068-54758cbbd687)# Utilwise
+# Utilwise
 
 **Utilwise** is a community-based expense management mobile app that helps users efficiently track, split, and settle shared expenses within different groups like families, friends, travel teams, or roommates.
 
