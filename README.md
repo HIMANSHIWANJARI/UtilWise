@@ -66,6 +66,7 @@
 
 ## Project Structure
 
+```
 lib/
 │
 ├── assets/ # Images and icons
@@ -75,7 +76,7 @@ lib/
 ├── provider/ # Firebase and business logic
 ├── components/ # Reusable UI components
 └── main.dart # App entry point
-
+```
 ## How to Run
 
 1. Clone this repo:
