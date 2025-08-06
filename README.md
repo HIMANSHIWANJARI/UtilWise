@@ -1,7 +1,6 @@
 # Utilwise
 
-**Utilwise** is a community-based expense management mobile app that helps users efficiently track, split, and settle shared expenses within different groups like families, friends, travel teams, or roommates.
-
+UtilWise is a community-driven expense management mobile app designed to help users effortlessly track, split, and settle shared expenses within various groups such as families, friends, travel companions, or roommates. It simplifies group budgeting by ensuring transparency, reducing confusion, and making financial collaboration seamless.
 ---
 
 ## Features
