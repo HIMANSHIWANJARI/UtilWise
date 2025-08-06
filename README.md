@@ -1,18 +1,43 @@
-# Utilwise
+## UtilWise
 
-UtilWise is a community-driven expense management mobile app designed to help users effortlessly track, split, and settle shared expenses within various groups such as families, friends, travel companions, or roommates. It simplifies group budgeting by ensuring transparency, reducing confusion, and making financial collaboration seamless.
+**UtilWise** is a community-driven expense management mobile app designed to help users effortlessly track, split, and settle shared expenses within various groups such as families, friends, travel companions, or roommates. It simplifies group budgeting by ensuring transparency, reducing confusion, and making financial collaboration seamless.
+
+
+
 ---
 
 ## Features
 
-- **Community Management**: Create and manage multiple communities with members.
-- **Predefined Object Categories**: Add expenses under categories like Education, Travel, Shopping, Vehicle, etc.
-- **Custom Expense Splitting**: Choose who paid and how the expense is split among members.
-- **"Settle All" Payments**: Settle multiple expenses at once with minimized transactions.
-- **Expense Summary**: View visual breakdowns of expenses using pie charts.
-- **Date Filtering**: Filter summaries by custom date ranges.
-- **OTP-based Login**: Secure login using email and OTP verification.
-- **Settled Expense History**: View a detailed summary of past settlements.
+Here’s a refined and enhanced version of your feature list with clearer structure and slight improvements in wording:
+
+---
+
+## Key Features
+
+* **Community Management**
+  Create, join, and manage multiple communities with ease, allowing members to collaborate on shared expenses.
+
+* **Predefined Expense Categories**
+  Organize expenses under common categories such as Education, Travel, Shopping, Vehicle, and more for better tracking.
+
+* **Customizable Expense Splitting**
+  Flexibly assign who paid and decide how each expense is split among community members.
+
+* **"Settle All" Multi-Payment Optimization**
+  Efficiently settle multiple outstanding expenses at once, minimizing the number of transactions required.
+
+* **Comprehensive Expense Summaries**
+  Visualize expense data with interactive pie charts and detailed breakdowns.
+
+* **Date Range Filtering**
+  Filter expense summaries and reports using customizable date ranges for focused insights.
+
+* **Secure OTP-Based Login**
+  Login securely with email and One-Time Password (OTP) verification to protect user accounts.
+
+* **Detailed Settled Expense History**
+  Access a complete history of all settled payments with summaries for transparency and record-keeping.
+
 
 ---
 
@@ -80,7 +105,7 @@ lib/
 
 1. Clone this repo:
    ```bash
-   git clone https://github.com/Prathisthapandey12/utilwise.git
+   git clone https://github.com/HIMANSHIWANJARI/UtilWise.git
    ```
 2. Install dependencies:
    ```bash
@@ -90,17 +115,5 @@ lib/
    ```bash
    flutter run
    ```
-
-## Authors & Contributions
-
-## Developed by
-- **Prathistha Pandey**
-- **Sneha Sahu**  
-
-## Acknowledgements
-
-Special thanks to **Dr. Puneet Goyal** for his constant guidance and feedback throughout the project.  
-Also thanks to our seniors for providing the base code, which we extended and improved.
-
 
 
